@@ -660,9 +660,17 @@
       var url = endpoint + join +
         "email=" + encodeURIComponent(email) +
         "&source=" + encodeURIComponent("zud-aka.com");
-      fetch(url, { method: "GET", mode: "no-cors", credentials: "omit" }).then(function () {
-        form.reset();
-        statusEl.textContent = "Contacto guardado. Gracias.";
+      fetch(url, { method: "GET", credentials: "omit", redirect: "follow" }).then(function (res) {
+        return res.text();
+      }).then(function (text) {
+        var t = String(text || "").replace(/^\uFEFF/, "").trim();
+        if (t === "ok") {
+          form.reset();
+          statusEl.textContent = "Contacto guardado. Gracias.";
+          return;
+        }
+        statusEl.dataset.state = "error";
+        statusEl.textContent = "No se pudo guardar en la hoja. Mira la pestaña Lista (abajo del todo).";
       }).catch(function () {
         statusEl.dataset.state = "error";
         statusEl.textContent = "No se pudo guardar. Prueba otra vez.";
