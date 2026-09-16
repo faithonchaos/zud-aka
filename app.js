@@ -405,11 +405,26 @@
     });
   }
 
+  function parseYouTubeId(value) {
+    var raw = String(value || "").trim();
+    if (!raw || raw === "VIDEO_ID") return "";
+    var m = raw.match(/[?&]v=([a-zA-Z0-9_-]{11})/);
+    if (m) return m[1];
+    m = raw.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+    if (m) return m[1];
+    m = raw.match(/youtube\.com\/(?:embed|shorts|live)\/([a-zA-Z0-9_-]{11})/);
+    if (m) return m[1];
+    m = raw.match(/^([a-zA-Z0-9_-]{11})$/);
+    if (m) return m[1];
+    return raw;
+  }
+
   function bootVideo(content) {
     var player = document.getElementById("yt-player");
     if (!player) return;
-    var id = content.videoId || "VIDEO_ID";
-    player.src = "https://www.youtube.com/embed/" + id;
+    var id = parseYouTubeId(content.videoId);
+    if (!id) return;
+    player.src = "https://www.youtube.com/embed/" + encodeURIComponent(id) + "?playsinline=1&rel=0";
   }
 
   function bootNav(content) {
@@ -667,6 +682,7 @@
     compressImage: compressImage,
     isAuthed: isAuthed,
     setAuthed: setAuthed,
+    parseYouTubeId: parseYouTubeId,
     bootPublic: bootPublic
   };
 })(window);

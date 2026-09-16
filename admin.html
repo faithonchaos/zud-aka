@@ -257,8 +257,8 @@
 
       <section class="card">
         <h2>Vídeo</h2>
-        <label>ID de YouTube <input id="videoId"></label>
-        <p class="note">Solo el ID, por ejemplo VIDEO_ID. No pongas la URL completa.</p>
+        <label>Vídeo de YouTube <input id="videoId" placeholder="https://www.youtube.com/watch?v=… o el ID"></label>
+        <p class="note">Pega la URL o solo el ID. Guardar se ve en este navegador. Para que salga en el móvil y en internet hay que Exportar content.json y publicarlo (o pasarme el enlace).</p>
       </section>
 
       <section class="card">
@@ -601,6 +601,7 @@
 
       function persist() {
         readForm();
+        if (ZudAka.parseYouTubeId) content.videoId = ZudAka.parseYouTubeId(content.videoId);
         if (!ZudAka.saveContent(content)) {
           status("No cabe en el navegador. Quita alguna foto subida o exporta el archivo.");
           return false;
@@ -638,7 +639,7 @@
       });
 
       document.getElementById("save").addEventListener("click", function () {
-        if (persist()) status("Guardado en este navegador. Abre la web para verlo.", true);
+        if (persist()) status("Guardado solo en este navegador. zud-aka.com no cambia hasta Exportar y publicar content.json.", true);
       });
 
       document.getElementById("export").addEventListener("click", function () {
