@@ -32,6 +32,165 @@
     });
   }
 
+  var PUBLISH_REPO = "faithonchaos/zud-aka";
+  var PUBLISH_PATH = "content.json";
+  var PUBLISH_BRANCH = "main";
+  var GH_SESSION = "zudaka-gh";
+
+  function bytesToB64(bytes) {
+    var bin = "";
+    for (var i = 0; i < bytes.length; i += 1) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin);
+  }
+
+  function b64ToBytes(b64) {
+    var bin = atob(b64);
+    var out = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i += 1) out[i] = bin.charCodeAt(i);
+    return out;
+  }
+
+  function utf8ToB64(str) {
+    var bytes = new TextEncoder().encode(str);
+    return bytesToB64(bytes);
+  }
+
+  function deriveKey(password, salt) {
+    return crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveKey"]).then(function (base) {
+      return crypto.subtle.deriveKey(
+        { name: "PBKDF2", salt: salt, iterations: 150000, hash: "SHA-256" },
+        base,
+        { name: "AES-GCM", length: 256 },
+        false,
+        ["encrypt", "decrypt"]
+      );
+    });
+  }
+
+  function encryptSecret(password, plaintext) {
+    var salt = crypto.getRandomValues(new Uint8Array(16));
+    var iv = crypto.getRandomValues(new Uint8Array(12));
+    return deriveKey(password, salt).then(function (key) {
+      return crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, key, new TextEncoder().encode(plaintext)).then(function (buf) {
+        return {
+          repo: PUBLISH_REPO,
+          path: PUBLISH_PATH,
+          branch: PUBLISH_BRANCH,
+          salt: bytesToB64(salt),
+          iv: bytesToB64(iv),
+          data: bytesToB64(new Uint8Array(buf))
+        };
+      });
+    });
+  }
+
+  function decryptSecret(password, blob) {
+    if (!blob || !blob.data || !blob.salt || !blob.iv) {
+      return Promise.reject(new Error("sin publicación"));
+    }
+    var salt = b64ToBytes(blob.salt);
+    var iv = b64ToBytes(blob.iv);
+    return deriveKey(password, salt).then(function (key) {
+      return crypto.subtle.decrypt({ name: "AES-GCM", iv: iv }, key, b64ToBytes(blob.data)).then(function (buf) {
+        return new TextDecoder().decode(buf);
+      });
+    });
+  }
+
+  function githubHeaders(token) {
+    return {
+      Accept: "application/vnd.github+json",
+      Authorization: "Bearer " + token,
+      "X-GitHub-Api-Version": "2022-11-28"
+    };
+  }
+
+  function publishRepo(data) {
+    return (data.admin && data.admin.publish && data.admin.publish.repo) || PUBLISH_REPO;
+  }
+
+  function verifyPublishToken(token, data) {
+    var repo = publishRepo(data);
+    var url = "https://api.github.com/repos/" + repo + "/contents/" + PUBLISH_PATH;
+    return fetch(url + "?ref=" + encodeURIComponent(PUBLISH_BRANCH), { headers: githubHeaders(token) }).then(function (res) {
+      if (res.ok || res.status === 404) return true;
+      return res.json().then(function (body) {
+        throw new Error(body.message || ("GitHub " + res.status));
+      }, function () {
+        throw new Error("Token de GitHub no válido o sin permiso de escritura");
+      });
+    });
+  }
+
+  function publishContent(data, token) {
+    var repo = publishRepo(data);
+    var path = (data.admin && data.admin.publish && data.admin.publish.path) || PUBLISH_PATH;
+    var branch = (data.admin && data.admin.publish && data.admin.publish.branch) || PUBLISH_BRANCH;
+    var encoded = utf8ToB64(JSON.stringify(data, null, 2));
+    var url = "https://api.github.com/repos/" + repo + "/contents/" + path;
+
+    function put(sha) {
+      var payload = {
+        message: "Admin: actualizar contenido",
+        content: encoded,
+        branch: branch
+      };
+      if (sha) payload.sha = sha;
+      return fetch(url, {
+        method: "PUT",
+        headers: Object.assign({ "Content-Type": "application/json" }, githubHeaders(token)),
+        body: JSON.stringify(payload)
+      }).then(function (res) {
+        if (res.ok) return res.json();
+        return res.json().then(function (body) {
+          var err = new Error(body.message || ("GitHub " + res.status));
+          err.status = res.status;
+          throw err;
+        }, function () {
+          throw new Error("No se pudo publicar en GitHub");
+        });
+      });
+    }
+
+    return fetch(url + "?ref=" + encodeURIComponent(branch), { headers: githubHeaders(token) }).then(function (res) {
+      if (res.status === 404) return put(null);
+      if (!res.ok) {
+        return res.json().then(function (body) {
+          throw new Error(body.message || ("GitHub " + res.status));
+        });
+      }
+      return res.json().then(function (file) {
+        return put(file.sha);
+      });
+    }).then(function (result) {
+      return result;
+    }, function (err) {
+      if (err && err.status === 409) {
+        return fetch(url + "?ref=" + encodeURIComponent(branch), { headers: githubHeaders(token) }).then(function (res) {
+          return res.json();
+        }).then(function (file) {
+          return put(file.sha);
+        });
+      }
+      throw err;
+    });
+  }
+
+  function getPublishToken() {
+    try {
+      return sessionStorage.getItem(GH_SESSION) || "";
+    } catch (err) {
+      return "";
+    }
+  }
+
+  function setPublishToken(token) {
+    try {
+      if (token) sessionStorage.setItem(GH_SESSION, token);
+      else sessionStorage.removeItem(GH_SESSION);
+    } catch (err) {}
+  }
+
   function loadFileContent() {
     return fetch("content.json", { cache: "no-store" }).then(function (res) {
       if (!res.ok) throw new Error("content.json no disponible");
@@ -56,6 +215,10 @@
     if (!data.rotterdam) data.rotterdam = fileContent.rotterdam || {};
     if (!data.rotterdam.endpoint && fileContent.rotterdam && fileContent.rotterdam.endpoint) {
       data.rotterdam.endpoint = fileContent.rotterdam.endpoint;
+    }
+    if (!data.admin) data.admin = fileContent.admin || {};
+    if (!data.admin.publish && fileContent.admin && fileContent.admin.publish) {
+      data.admin.publish = fileContent.admin.publish;
     }
     return data;
   }
@@ -665,7 +828,10 @@
 
   function setAuthed(on) {
     if (on) sessionStorage.setItem(SESSION_KEY, "1");
-    else sessionStorage.removeItem(SESSION_KEY);
+    else {
+      sessionStorage.removeItem(SESSION_KEY);
+      setPublishToken("");
+    }
   }
 
   global.ZudAka = {
@@ -683,6 +849,12 @@
     isAuthed: isAuthed,
     setAuthed: setAuthed,
     parseYouTubeId: parseYouTubeId,
+    encryptSecret: encryptSecret,
+    decryptSecret: decryptSecret,
+    verifyPublishToken: verifyPublishToken,
+    publishContent: publishContent,
+    getPublishToken: getPublishToken,
+    setPublishToken: setPublishToken,
     bootPublic: bootPublic
   };
 })(window);

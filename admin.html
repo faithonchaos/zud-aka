@@ -83,6 +83,7 @@
       background: linear-gradient(180deg, #ff6a32, var(--ember));
       color: #fff;
     }
+    .btn:disabled { opacity: 0.5; cursor: wait; }
     .btn-gold { background: linear-gradient(180deg, #ffce55, var(--gold)); color: #140800; }
     .btn-ghost { background: #241f1b; color: var(--smoke); border: 1px solid var(--line); }
     .actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.4rem 0 1rem; }
@@ -156,7 +157,7 @@
 <body>
   <div id="login-view" class="wrap">
     <h1>Panel Zud•AkA</h1>
-    <p class="note">Este panel es para el artista. No es un login de internet todavía: guarda los cambios en este navegador y puede exportar un archivo para publicarlos.</p>
+    <p class="note">Este panel es para el artista. Tras conectar GitHub una vez, Guardar publica en zud-aka.com.</p>
     <form class="card" id="login-form">
       <label>Clave
         <input id="password" type="password" autocomplete="current-password" required>
@@ -178,8 +179,8 @@
       </div>
     </header>
     <div class="wrap">
-      <div class="warn">
-        Los cambios se guardan en este ordenador y este navegador. Para que el público los vea en internet hace falta subir el sitio al dominio y, si quieres un editor real, conectarlo después. Mientras tanto: edita, pulsa Guardar, y usa Exportar para descargar <code>content.json</code>.
+      <div class="warn" id="publish-banner">
+        Conecta GitHub una vez (abajo, Publicar en internet). Después, Guardar actualiza zud-aka.com.
       </div>
       <p id="save-status" class="note" role="status"></p>
 
@@ -193,6 +194,7 @@
         <a href="#admin-social">TikTok / Instagram / YouTube</a>
         <a href="#admin-gallery">Fotos</a>
         <a href="#admin-blocks">Secciones extra</a>
+        <a href="#admin-publish">Publicar</a>
         <a href="#admin-pass">Cambiar clave</a>
       </nav>
 
@@ -258,7 +260,7 @@
       <section class="card">
         <h2>Vídeo</h2>
         <label>Vídeo de YouTube <input id="videoId" placeholder="https://www.youtube.com/watch?v=… o el ID"></label>
-        <p class="note">Pega la URL o solo el ID. Guardar se ve en este navegador. Para que salga en el móvil y en internet hay que Exportar content.json y publicarlo (o pasarme el enlace).</p>
+        <p class="note">Pega la URL o solo el ID. Con GitHub conectado, Guardar lo deja en zud-aka.com (el móvil tarda un minuto).</p>
       </section>
 
       <section class="card">
@@ -325,19 +327,33 @@
         <div id="order-list"></div>
       </section>
 
+      <section class="card" id="admin-publish">
+        <h2>Publicar en internet</h2>
+        <p class="note" id="publish-state">Comprobando…</p>
+        <div id="publish-setup">
+          <p class="note">Una sola vez. Crea un token fino de GitHub, permiso <strong>Contents: Read and write</strong>, solo el repositorio <strong>faithonchaos/zud-aka</strong>. Se cifra con la clave del admin; no queda a la vista en la web.</p>
+          <p class="note"><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Crear token en GitHub</a></p>
+          <label>Clave del admin <input id="publish-pass" type="password" autocomplete="current-password"></label>
+          <label>Token de GitHub <input id="gh-token" type="password" autocomplete="off"></label>
+          <button class="btn" type="button" id="connect-publish">Conectar y publicar</button>
+        </div>
+        <button class="btn-ghost hidden" type="button" id="disconnect-publish">Desconectar publicación</button>
+      </section>
+
       <section class="card" id="admin-pass">
         <h2>Cambiar clave</h2>
-        <p class="note">La clave actual es la que usas para entrar. Escribe la nueva, pulsa Actualizar clave y luego Guardar. Si vas a publicar la web, pulsa también Exportar content.json y sustituye ese archivo en la carpeta del sitio.</p>
+        <p class="note">La clave actual es la que usas para entrar. Escribe la nueva y pulsa Actualizar clave. Si GitHub está conectado, se publica sola.</p>
         <label>Nueva clave <input id="new-pass" type="password" autocomplete="new-password"></label>
         <button class="btn-ghost" type="button" id="set-pass">Actualizar clave</button>
       </section>
     </div>
   </div>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=8"></script>
   <script>
     (function () {
       var content = null;
+      var sessionPass = "";
       var CORE = {
         hero: "Inicio",
         video: "Vídeo",
@@ -602,6 +618,7 @@
       function persist() {
         readForm();
         if (ZudAka.parseYouTubeId) content.videoId = ZudAka.parseYouTubeId(content.videoId);
+        if (!content.admin) content.admin = {};
         if (!ZudAka.saveContent(content)) {
           status("No cabe en el navegador. Quita alguna foto subida o exporta el archivo.");
           return false;
@@ -609,10 +626,74 @@
         return true;
       }
 
+      function paintPublish() {
+        var live = !!ZudAka.getPublishToken();
+        var configured = !!(content && content.admin && content.admin.publish && content.admin.publish.data);
+        var state = document.getElementById("publish-state");
+        var setup = document.getElementById("publish-setup");
+        var disc = document.getElementById("disconnect-publish");
+        var banner = document.getElementById("publish-banner");
+        if (live) {
+          state.textContent = "Conectado. Guardar actualiza zud-aka.com.";
+          state.className = "ok";
+          setup.classList.add("hidden");
+          disc.classList.remove("hidden");
+          banner.textContent = "GitHub conectado. Edita y pulsa Guardar: en un minuto se ve en internet.";
+        } else if (configured) {
+          state.textContent = "Hay publicación configurada. Entra con la clave en esta pestaña para activarla.";
+          state.className = "note";
+          setup.classList.remove("hidden");
+          disc.classList.add("hidden");
+          banner.textContent = "Entra otra vez con la clave para publicar desde esta pestaña.";
+        } else {
+          state.textContent = "Sin conectar. Pega un token de GitHub una vez.";
+          state.className = "note";
+          setup.classList.remove("hidden");
+          disc.classList.add("hidden");
+          banner.textContent = "Conecta GitHub una vez (abajo, Publicar en internet). Después, Guardar actualiza zud-aka.com.";
+        }
+      }
+
+      function persistAndPublish(okMsg) {
+        if (!persist()) return Promise.resolve(false);
+        var token = ZudAka.getPublishToken();
+        if (!token) {
+          status("Guardado en este navegador. Conecta GitHub abajo para que salga en internet.");
+          paintPublish();
+          return Promise.resolve(false);
+        }
+        status("Publicando en zud-aka.com…");
+        return ZudAka.publishContent(content, token).then(function () {
+          status(okMsg || "Publicado. Recarga zud-aka.com en un minuto.", true);
+          paintPublish();
+          return true;
+        }).catch(function (err) {
+          status("Guardado aquí, pero no se pudo publicar: " + (err && err.message ? err.message : err));
+          paintPublish();
+          return false;
+        });
+      }
+
       function showApp() {
         document.getElementById("login-view").classList.add("hidden");
         document.getElementById("app-view").classList.remove("hidden");
         fillForm();
+        paintPublish();
+      }
+
+      function unlockPublish(password, data) {
+        var blob = data.admin && data.admin.publish;
+        if (!blob || !blob.data) {
+          ZudAka.setPublishToken("");
+          return Promise.resolve(false);
+        }
+        return ZudAka.decryptSecret(password, blob).then(function (token) {
+          ZudAka.setPublishToken(token);
+          return true;
+        }).catch(function () {
+          ZudAka.setPublishToken("");
+          return false;
+        });
       }
 
       document.getElementById("login-form").addEventListener("submit", function (event) {
@@ -625,27 +706,89 @@
               document.getElementById("login-error").textContent = "Clave incorrecta.";
               return;
             }
-            ZudAka.setAuthed(true);
-            showApp();
+            sessionPass = pass;
+            return unlockPublish(pass, data).then(function () {
+              ZudAka.setAuthed(true);
+              showApp();
+            });
           });
         }).catch(function () {
-          document.getElementById("login-error").textContent = "No se pudo cargar content.json. Abre el admin desde el servidor local, no como archivo suelto.";
+          document.getElementById("login-error").textContent = "No se pudo cargar content.json. Abre el admin desde el servidor, no como archivo suelto.";
         });
       });
 
       document.getElementById("logout").addEventListener("click", function () {
+        sessionPass = "";
         ZudAka.setAuthed(false);
         location.reload();
       });
 
       document.getElementById("save").addEventListener("click", function () {
-        if (persist()) status("Guardado solo en este navegador. zud-aka.com no cambia hasta Exportar y publicar content.json.", true);
+        var btn = document.getElementById("save");
+        btn.disabled = true;
+        persistAndPublish().then(function () {
+          btn.disabled = false;
+        });
       });
 
       document.getElementById("export").addEventListener("click", function () {
         if (!persist()) return;
         ZudAka.exportContent(content);
-        status("Archivo descargado. Sustituye content.json en la carpeta del sitio cuando publiques.", true);
+        status("Copia descargada. Si GitHub está conectado, usa Guardar para internet.", true);
+      });
+
+      document.getElementById("connect-publish").addEventListener("click", function () {
+        var token = document.getElementById("gh-token").value.trim();
+        var pass = sessionPass || document.getElementById("publish-pass").value;
+        if (!token) {
+          status("Pega el token de GitHub.");
+          return;
+        }
+        if (!pass) {
+          status("Escribe la clave del admin para cifrar el token.");
+          return;
+        }
+        var btn = document.getElementById("connect-publish");
+        btn.disabled = true;
+        ZudAka.sha256(pass).then(function (hash) {
+          if (!content.admin || hash !== content.admin.passwordSha256) {
+            throw new Error("Clave del admin incorrecta.");
+          }
+          return ZudAka.verifyPublishToken(token, content).then(function () {
+            return ZudAka.encryptSecret(pass, token);
+          });
+        }).then(function (blob) {
+          if (!content.admin) content.admin = {};
+          content.admin.publish = blob;
+          sessionPass = pass;
+          ZudAka.setPublishToken(token);
+          document.getElementById("gh-token").value = "";
+          document.getElementById("publish-pass").value = "";
+          return persistAndPublish("Conectado. A partir de ahora Guardar actualiza zud-aka.com.");
+        }).catch(function (err) {
+          status(err && err.message ? err.message : "No se pudo conectar.");
+        }).then(function () {
+          btn.disabled = false;
+        });
+      });
+
+      document.getElementById("disconnect-publish").addEventListener("click", function () {
+        var token = ZudAka.getPublishToken();
+        if (content.admin) delete content.admin.publish;
+        ZudAka.setPublishToken("");
+        if (!persist()) return;
+        if (!token) {
+          paintPublish();
+          status("Publicación desconectada en este navegador.");
+          return;
+        }
+        ZudAka.publishContent(content, token).then(function () {
+          paintPublish();
+          status("Publicación desconectada.", true);
+        }).catch(function (err) {
+          paintPublish();
+          status("Desconectado aquí. El servidor: " + (err && err.message ? err.message : err));
+        });
       });
 
       document.getElementById("reset").addEventListener("click", function () {
@@ -653,6 +796,7 @@
         ZudAka.loadFileContent().then(function (data) {
           content = data;
           fillForm();
+          paintPublish();
           status("Contenido restaurado desde content.json.");
         });
       });
@@ -715,7 +859,7 @@
         chain.then(function () {
           fillLibraries();
           renderLibrary();
-          if (persist()) status("Fotos subidas a la librería. Ya puedes elegirlas en cualquier sección.", true);
+          persistAndPublish("Fotos subidas a la librería y publicadas.");
           event.target.value = "";
         }).catch(function () {
           status("No se pudo leer alguna imagen.");
@@ -740,7 +884,7 @@
         renderBlocks();
         renderOrder();
         persist();
-        status("Sección creada. Edítala, pulsa Guardar y ábrela en la web.", true);
+        status("Sección creada. Edítala y pulsa Guardar para publicarla.", true);
       });
 
       document.getElementById("blocks-list").addEventListener("input", function (event) {
@@ -792,11 +936,23 @@
       document.getElementById("set-pass").addEventListener("click", function () {
         var next = document.getElementById("new-pass").value;
         if (!next) return;
+        var token = ZudAka.getPublishToken();
         ZudAka.sha256(next).then(function (hash) {
+          if (!content.admin) content.admin = {};
           content.admin.passwordSha256 = hash;
-          persist();
-          document.getElementById("new-pass").value = "";
-          status("Clave actualizada en este navegador. Exporta content.json para llevarla al servidor.", true);
+          var chain = Promise.resolve();
+          if (token) {
+            chain = ZudAka.encryptSecret(next, token).then(function (blob) {
+              content.admin.publish = blob;
+            });
+          }
+          return chain.then(function () {
+            sessionPass = next;
+            document.getElementById("new-pass").value = "";
+            return persistAndPublish("Clave actualizada y publicada.");
+          });
+        }).catch(function (err) {
+          status(err && err.message ? err.message : "No se pudo cambiar la clave.");
         });
       });
 
