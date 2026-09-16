@@ -173,6 +173,7 @@
       img.src = item.src;
       img.alt = item.alt || content.brand.name;
       img.loading = index < 2 ? "eager" : "lazy";
+      img.draggable = false;
       img.width = 1600;
       img.height = 2000;
 
@@ -206,6 +207,8 @@
     var index = 0;
     var busy = false;
     var tapStart = null;
+    var swiped = false;
+    var lastStepAt = 0;
     var prevBtn = document.getElementById("gallery-prev");
     var nextBtn = document.getElementById("gallery-next");
 
@@ -246,10 +249,15 @@
       if (next >= shots.length) next = 0;
       if (next === index) return false;
       busy = true;
+      lastStepAt = Date.now();
       frame.classList.add("is-used");
       show(next, dir > 0 ? "next" : "prev");
       window.setTimeout(function () { busy = false; }, reduce ? 80 : 540);
       return true;
+    }
+
+    function fromControls(event) {
+      return !!(event.target && event.target.closest && event.target.closest(".gallery-dot, .gallery-nav"));
     }
 
     if (dots) {
@@ -282,21 +290,42 @@
     });
 
     frame.addEventListener("pointerdown", function (event) {
-      if (event.target.closest(".gallery-dot, .gallery-nav")) return;
+      if (fromControls(event)) return;
       tapStart = { x: event.clientX, y: event.clientY };
+      swiped = false;
+    });
+    frame.addEventListener("pointermove", function (event) {
+      if (!tapStart || swiped) return;
+      var dx = event.clientX - tapStart.x;
+      var dy = event.clientY - tapStart.y;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.15) {
+        swiped = true;
+        tapStart = null;
+        step(dx < 0 ? 1 : -1);
+      }
     });
     frame.addEventListener("pointerup", function (event) {
       if (!tapStart) return;
       var dx = event.clientX - tapStart.x;
       var dy = event.clientY - tapStart.y;
+      var x = event.clientX;
       tapStart = null;
-      if (Math.abs(dx) > 14 || Math.abs(dy) > 14) return;
-      if (event.target.closest(".gallery-dot, .gallery-nav")) return;
-      var rect = frame.getBoundingClientRect();
-      var x = event.clientX - rect.left;
-      step(x < rect.width * 0.28 ? -1 : 1);
+      if (swiped || fromControls(event)) return;
+      if (Math.abs(dx) < 56 && Math.abs(dy) < 56) {
+        var rect = frame.getBoundingClientRect();
+        step(x - rect.left < rect.width * 0.28 ? -1 : 1);
+      }
     });
-    frame.addEventListener("pointercancel", function () { tapStart = null; });
+    frame.addEventListener("pointercancel", function () {
+      tapStart = null;
+      swiped = false;
+    });
+    frame.addEventListener("click", function (event) {
+      if (fromControls(event) || swiped) return;
+      if (Date.now() - lastStepAt < 450) return;
+      var rect = frame.getBoundingClientRect();
+      step(event.clientX - rect.left < rect.width * 0.28 ? -1 : 1);
+    });
 
     frame.addEventListener("keydown", function (event) {
       if (event.key === "ArrowDown" || event.key === "ArrowRight") {

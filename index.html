@@ -434,7 +434,10 @@
       position: relative;
       width: min(100%, var(--max));
       margin: 0 auto;
-      height: min(86svh, 46rem);
+      height: min(74svh, 46rem);
+      touch-action: pan-y;
+      -webkit-user-select: none;
+      user-select: none;
       background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 30%),
         #100e0c;
@@ -528,39 +531,43 @@
     }
     .gallery-nav {
       position: absolute;
-      top: 42%;
+      top: 38%;
       z-index: 7;
-      width: 3rem;
-      height: 3rem;
-      border: 1px solid #8a8680;
-      background: rgba(16, 14, 12, 0.75);
-      color: var(--smoke);
-      font-size: 1.8rem;
+      width: 2.8rem;
+      height: 3.6rem;
+      border: 1px solid var(--ember);
+      background: rgba(16, 14, 12, 0.82);
+      color: var(--ember);
+      font-size: 2rem;
       line-height: 1;
       cursor: pointer;
     }
-    .gallery-nav-prev { left: 0.4rem; }
-    .gallery-nav-next { right: 0.4rem; }
-    .gallery-nav:active { border-color: var(--ember); color: var(--ember); }
+    .gallery-nav-prev { left: 0.35rem; }
+    .gallery-nav-next { right: 0.35rem; }
+    .gallery-nav:active { filter: brightness(1.25); }
     .gallery-tap {
       position: absolute;
       left: 50%;
-      bottom: 3.5rem;
+      bottom: 3.35rem;
       transform: translateX(-50%);
       z-index: 7;
       margin: 0;
-      padding: 0.38rem 0.75rem;
+      padding: 0.45rem 0.85rem;
       border: 1px solid var(--ember);
-      background: rgba(16, 14, 12, 0.85);
+      background: rgba(16, 14, 12, 0.9);
       color: var(--ember);
-      font-size: 0.68rem;
-      letter-spacing: 0.18em;
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       font-weight: 700;
+      white-space: nowrap;
       pointer-events: none;
       animation: tap-pulse 1.6s ease-in-out infinite;
     }
-    .gallery-frame.is-used .gallery-tap { display: none; }
+    .gallery-frame.is-used .gallery-tap {
+      animation: none;
+      opacity: 0.78;
+    }
     @keyframes tap-pulse {
       0%, 100% { opacity: 0.5; }
       50% { opacity: 1; }
@@ -932,13 +939,13 @@
       <div class="wrap gallery-intro">
         <p class="kicker">Archivo visual</p>
         <h2 class="section-title" id="fotos-title">Fotografías</h2>
-        <p class="gallery-hint">Toca la foto para la siguiente · desliza fuera del marco para seguir bajando</p>
+        <p class="gallery-hint">Toca la foto o desliza a los lados · baja la página fuera del marco</p>
       </div>
       <div class="gallery-frame" id="gallery-frame" tabindex="0" aria-label="Galería de fotografías">
         <div class="gallery-stage" id="gallery-grid"></div>
         <button type="button" class="gallery-nav gallery-nav-prev" id="gallery-prev" aria-label="Foto anterior">‹</button>
         <button type="button" class="gallery-nav gallery-nav-next" id="gallery-next" aria-label="Foto siguiente">›</button>
-        <p class="gallery-tap" id="gallery-tap">Toca</p>
+        <p class="gallery-tap" id="gallery-tap">Toca o desliza →</p>
         <nav class="gallery-dots" id="gallery-dots" aria-label="Fotos"></nav>
       </div>
     </section>
@@ -1042,7 +1049,7 @@
       border: 0;
     }
   </style>
-  <script src="app.js"></script>
+  <script src="app.js?v=5"></script>
   <script>ZudAka.bootPublic();</script>
 </body>
 </html>
