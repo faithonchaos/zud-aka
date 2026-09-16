@@ -654,15 +654,19 @@
         statusEl.textContent = "La lista aún no está conectada. El correo no se ha guardado.";
         return;
       }
-      form.setAttribute("action", endpoint);
-      form.setAttribute("target", "lista-frame");
       statusEl.dataset.state = "ready";
       statusEl.textContent = "Guardando…";
-      form.submit();
-      window.setTimeout(function () {
+      var join = endpoint.indexOf("?") >= 0 ? "&" : "?";
+      var url = endpoint + join +
+        "email=" + encodeURIComponent(email) +
+        "&source=" + encodeURIComponent("zud-aka.com");
+      fetch(url, { method: "GET", mode: "no-cors", credentials: "omit" }).then(function () {
         form.reset();
         statusEl.textContent = "Contacto guardado. Gracias.";
-      }, 700);
+      }).catch(function () {
+        statusEl.dataset.state = "error";
+        statusEl.textContent = "No se pudo guardar. Prueba otra vez.";
+      });
     });
   }
 
