@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0908">
+  <meta name="color-scheme" content="dark">
+  <title>Zud•AkA — El Gocho Divergente</title>
+  <link rel="icon" href="img/logo-seal-zk.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Cinzel:wght@400;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0908;
+      --steel: #8a8680;
+      --steel-dark: #3a3835;
+      --ember: #ff4a12;
+      --ember-deep: #9a1c0c;
+      --gold: #c9a227;
+      --acid: #e7ff3d;
+      --smoke: #ece7dc;
+      --muted: #b7b1a6;
+      --max: 76rem;
+      --header-h: 4.4rem;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      max-width: 100%;
+      overflow-x: clip;
+      background: var(--bg);
+      color: var(--smoke);
+    }
+    body {
+      font-family: "Oswald", "Segoe UI", sans-serif;
+      line-height: 1.45;
+      min-height: 100vh;
+      background:
+        radial-gradient(900px 480px at 50% -8%, rgba(255, 74, 18, 0.18), transparent 55%),
+        radial-gradient(700px 400px at 100% 20%, rgba(201, 162, 39, 0.08), transparent 50%),
+        var(--bg);
+    }
+    img, iframe { max-width: 100%; display: block; }
+    a { color: inherit; }
+    h1, h2, h3 {
+      font-family: "Anton", Impact, sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      line-height: 0.9;
+      text-transform: uppercase;
+      margin: 0;
+    }
+    p { margin: 0; }
+    :focus-visible { outline: 2px solid var(--ember); outline-offset: 3px; }
+
+    .grain, .scan {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+    }
+    .grain {
+      opacity: 0.14;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='.85'/></svg>");
+    }
+    .scan {
+      opacity: 0.07;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0 2px,
+        rgba(0, 0, 0, 0.35) 2px 3px
+      );
+    }
+    #sparks {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .skip {
+      position: absolute;
+      left: 0.75rem;
+      top: -4rem;
+      z-index: 100;
+      background: var(--ember);
+      color: #fff;
+      padding: 0.7rem 1rem;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .skip:focus { top: 0.75rem; }
+
+    .wrap {
+      width: min(100% - 2rem, var(--max));
+      margin-inline: auto;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: linear-gradient(180deg, rgba(10, 9, 8, 0.94), rgba(10, 9, 8, 0.78));
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(138, 134, 128, 0.35);
+    }
+    .site-header.is-scrolled {
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      min-height: 4.4rem;
+      padding-block: 0.5rem;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      text-decoration: none;
+      min-width: 0;
+    }
+    .brand-seal {
+      width: 2.6rem;
+      height: 2.6rem;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 0 16px rgba(255, 74, 18, 0.45);
+      animation: spin 28s linear infinite;
+    }
+    .brand-copy { display: flex; flex-direction: column; min-width: 0; }
+    .brand-name {
+      font-family: "Anton", Impact, sans-serif;
+      font-size: 1.15rem;
+      letter-spacing: 0.12em;
+    }
+    .brand-tag {
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .nav-toggle { display: flex; align-items: center; }
+    .nav-toggle summary {
+      list-style: none;
+      cursor: pointer;
+      min-height: 2.75rem;
+      min-width: 2.75rem;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--steel-dark);
+      background: #161412;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+    .nav-toggle summary::-webkit-details-marker { display: none; }
+    .site-nav {
+      position: absolute;
+      right: 1rem;
+      top: calc(100% + 0.4rem);
+      min-width: min(18rem, calc(100vw - 2rem));
+      background: #120f0d;
+      border: 1px solid var(--steel-dark);
+      padding: 0.5rem;
+      display: grid;
+      gap: 0.2rem;
+    }
+    .site-nav a {
+      text-decoration: none;
+      padding: 0.85rem 0.9rem;
+      min-height: 2.75rem;
+      display: flex;
+      align-items: center;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .site-nav a:hover { color: var(--ember); }
+    .header-cta { display: none; }
+    .social {
+      min-width: 2.75rem;
+      min-height: 2.75rem;
+      padding: 0.55rem 0.7rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      color: var(--smoke);
+      background: linear-gradient(180deg, #4f4c47, #1a1816);
+      border: 1px solid #8a8680;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    }
+    .social svg {
+      width: 1.2rem;
+      height: 1.2rem;
+      fill: currentColor;
+      flex-shrink: 0;
+      display: block;
+    }
+    .social span {
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .social:hover { border-color: var(--ember); color: var(--ember); }
+    .hero-socials {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.45rem;
+      width: 100%;
+    }
+    .hero-socials .social {
+      width: 100%;
+      min-height: 3.2rem;
+      padding: 0.45rem 0.35rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      min-height: 3.2rem;
+      padding: 0.85rem 1.3rem;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-weight: 700;
+      font-size: 0.84rem;
+      cursor: pointer;
+      color: var(--smoke);
+      background: linear-gradient(180deg, #4f4c47, #2c2926 46%, #1a1816);
+      border: 1px solid #8a8680;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.16),
+        inset 0 -2px 8px rgba(0, 0, 0, 0.45),
+        0 7px 0 #0a0908;
+      transition: transform 0.15s ease, filter 0.15s ease, border-color 0.15s ease;
+    }
+    .btn:hover {
+      filter: brightness(1.08);
+      border-color: var(--ember);
+    }
+    .btn:active {
+      transform: translateY(4px);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 3px 0 #0a0908;
+    }
+    .btn-fire {
+      color: #f7ece6;
+      background: linear-gradient(180deg, #6e261c, #c62818 44%, #7a140c);
+      border-color: #ff4a12;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 180, 140, 0.28),
+        inset 0 -2px 8px rgba(0, 0, 0, 0.35),
+        0 7px 0 #3a0c08,
+        0 0 22px rgba(255, 74, 18, 0.28);
+    }
+    .btn svg { width: 1.2rem; height: 1.2rem; fill: currentColor; }
+
+    .hero {
+      position: relative;
+      padding: clamp(1.2rem, 4vw, 2.5rem) 0 2.4rem;
+    }
+    .hero-seal {
+      display: none;
+      position: absolute;
+      right: -12%;
+      top: 8%;
+      width: min(70vw, 34rem);
+      opacity: 0.18;
+      animation: spin 48s linear infinite;
+      filter: drop-shadow(0 0 28px rgba(255, 74, 18, 0.35));
+      z-index: 0;
+    }
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 1.2rem;
+    }
+    .stamp {
+      display: inline-block;
+      border: 1px solid var(--ember);
+      color: var(--ember);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.38rem 0.65rem;
+      background: rgba(255, 74, 18, 0.08);
+    }
+    .hero-logo {
+      width: min(100%, 38rem);
+      margin: 0.85rem 0 0.4rem;
+      filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.65));
+    }
+    .hero-logo.is-glitch {
+      animation: glitch 0.22s steps(2, end);
+    }
+    .hero-tag {
+      font-size: clamp(1.05rem, 3.6vw, 1.7rem);
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      margin-bottom: 0.85rem;
+    }
+    .hero-copy {
+      color: var(--muted);
+      max-width: 34rem;
+      margin-bottom: 1.15rem;
+      overflow-wrap: break-word;
+    }
+    .hero-actions { display: grid; gap: 0.75rem; }
+    .hero-visual {
+      position: relative;
+      overflow: hidden;
+      background: #070605;
+      border: 1px solid rgba(201, 162, 39, 0.28);
+      box-shadow: 0 24px 40px rgba(0, 0, 0, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-visual img {
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: min(78vh, 44rem);
+      object-fit: contain;
+      display: block;
+    }
+
+    .marquee {
+      overflow: hidden;
+      border-block: 1px solid rgba(255, 74, 18, 0.35);
+      background: #110d0b;
+      padding: 0.55rem 0;
+    }
+    .marquee-track {
+      display: flex;
+      gap: 2rem;
+      width: max-content;
+      animation: marquee 28s linear infinite;
+      font-family: "Anton", Impact, sans-serif;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-size: clamp(1.1rem, 3vw, 1.6rem);
+      color: var(--ember);
+    }
+    .marquee-track span { white-space: nowrap; }
+    .marquee-track b { color: var(--gold); font-weight: 400; }
+
+    .hazard {
+      height: 11px;
+      background: repeating-linear-gradient(-45deg, var(--ember) 0 11px, #120c08 11px 22px);
+    }
+
+    section { padding: clamp(2.1rem, 6vw, 4.4rem) 0; }
+    .kicker {
+      font-family: "Cinzel", serif;
+      color: var(--ember);
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-size: clamp(2rem, 7vw, 3.4rem);
+      margin-bottom: 1.1rem;
+    }
+
+    .video-stage {
+      display: flex;
+      justify-content: center;
+    }
+    .video-frame {
+      position: relative;
+      overflow: hidden;
+      width: min(100%, calc(min(82svh, 40rem) * 9 / 16));
+      border: 1px solid rgba(138, 134, 128, 0.45);
+      box-shadow:
+        0 0 0 6px #1a1613,
+        0 0 40px rgba(255, 74, 18, 0.18);
+    }
+    .video-frame iframe {
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      height: auto;
+      border: 0;
+      background: #000;
+      display: block;
+    }
+    .orb {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff, var(--ember) 40%, #4a0000);
+      box-shadow: 0 0 18px var(--ember);
+      z-index: 2;
+    }
+    .orb-tl { top: 8px; left: 8px; }
+    .orb-tr { top: 8px; right: 8px; }
+
+    .gallery-reel {
+      padding-bottom: 0.4rem;
+    }
+    .gallery-intro {
+      margin-bottom: 0.85rem;
+    }
+    .gallery-hint {
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      margin-top: 0.35rem;
+    }
+    .gallery-frame {
+      position: relative;
+      width: min(100%, var(--max));
+      margin: 0 auto;
+      height: min(86svh, 46rem);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 30%),
+        #100e0c;
+      border: 1px solid #6a6660;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 22px 40px rgba(0, 0, 0, 0.45);
+      overflow: hidden;
+    }
+    .gallery-frame.is-hot {
+      border-color: var(--ember);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 0 0 1px rgba(255, 74, 18, 0.35),
+        0 22px 40px rgba(0, 0, 0, 0.45);
+    }
+    .gallery-frame::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 5;
+      opacity: 0;
+      background:
+        repeating-linear-gradient(-45deg, rgba(255, 74, 18, 0.35) 0 10px, transparent 10px 20px),
+        rgba(255, 74, 18, 0.18);
+      mix-blend-mode: overlay;
+    }
+    .gallery-frame.is-slapping::after {
+      animation: scratch 0.38s steps(3, end);
+    }
+    .gallery-stage {
+      position: relative;
+      height: calc(100% - 3.4rem);
+    }
+    .shot {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .shot.is-prev {
+      opacity: 1;
+      z-index: 1;
+    }
+    .shot.is-on {
+      opacity: 1;
+      z-index: 2;
+      pointer-events: auto;
+    }
+    .shot.is-on[data-dir="next"] { animation: slap-in 0.52s cubic-bezier(0.16, 1.2, 0.32, 1) both; }
+    .shot.is-on[data-dir="prev"] { animation: slap-back 0.52s cubic-bezier(0.16, 1.2, 0.32, 1) both; }
+    .shot-frame {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.55rem 0.7rem 0;
+    }
+    .shot-frame img {
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      filter: contrast(1.06) saturate(0.96);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+    }
+    .shot-caption {
+      flex: 0 0 auto;
+      padding: 0.45rem 1rem 0.7rem;
+    }
+    .shot-num {
+      font-family: "Anton", Impact, sans-serif;
+      color: var(--ember);
+      letter-spacing: 0.22em;
+      font-size: 0.78rem;
+      margin-bottom: 0.2rem;
+    }
+    .shot-text {
+      font-family: "Anton", Impact, sans-serif;
+      font-size: clamp(1.15rem, 3.4vw, 1.9rem);
+      line-height: 0.95;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      max-width: 22ch;
+    }
+    .gallery-dots {
+      position: absolute;
+      right: 0.7rem;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 6;
+      display: grid;
+      gap: 0.45rem;
+    }
+    .gallery-dot {
+      width: 0.55rem;
+      height: 0.55rem;
+      padding: 0;
+      border: 1px solid var(--ember);
+      border-radius: 50%;
+      background: transparent;
+      cursor: pointer;
+    }
+    .gallery-dot.is-on {
+      background: var(--ember);
+      box-shadow: 0 0 12px var(--ember);
+    }
+    @keyframes slap-in {
+      0% { transform: rotate(-11deg) scale(1.22) translate(10%, 8%); filter: contrast(1.8) saturate(0.2); }
+      42% { transform: rotate(2deg) scale(1.02); filter: contrast(1.15) saturate(1.1); }
+      100% { transform: none; filter: none; }
+    }
+    @keyframes slap-back {
+      0% { transform: rotate(11deg) scale(1.22) translate(-10%, 8%); filter: contrast(1.8) saturate(0.2); }
+      42% { transform: rotate(-2deg) scale(1.02); filter: contrast(1.15) saturate(1.1); }
+      100% { transform: none; filter: none; }
+    }
+    @keyframes scratch {
+      0%, 100% { opacity: 0; }
+      18% { opacity: 1; }
+      40% { opacity: 0.15; }
+      58% { opacity: 0.55; }
+    }
+
+    .mystic {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 20% 40%, rgba(255, 74, 18, 0.16), transparent 45%),
+        #0c0a09;
+    }
+    .mystic-grid {
+      display: grid;
+      gap: 1.2rem;
+      align-items: center;
+    }
+    .chant {
+      font-family: "Cinzel", serif;
+      font-size: clamp(2.4rem, 10vw, 5.5rem);
+      color: rgba(255, 74, 18, 0.16);
+      line-height: 0.85;
+      text-transform: lowercase;
+      letter-spacing: 0.02em;
+      user-select: none;
+    }
+    .mystic-photo {
+      position: relative;
+      overflow: hidden;
+      background: #070605;
+      border: 1px solid rgba(255, 74, 18, 0.35);
+    }
+    .mystic-photo img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+    .sigil {
+      position: absolute;
+      width: 28%;
+      right: 8%;
+      bottom: 8%;
+      opacity: 0.55;
+      animation: spin 22s linear infinite;
+      mix-blend-mode: screen;
+    }
+
+    .revolt-stage {
+      position: relative;
+      min-height: 70vh;
+      overflow: hidden;
+      background: #070605;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .revolt-stage img {
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: min(92vh, 56rem);
+      object-fit: contain;
+    }
+    .revolt-caption {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 2rem 1rem 1.4rem;
+      background: linear-gradient(180deg, transparent, rgba(10, 9, 8, 0.92));
+    }
+
+    .bio-plate, .form-plate {
+      border: 1px solid rgba(138, 134, 128, 0.4);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 40%),
+        linear-gradient(90deg, #2a2724, #4a4742 18%, #1f1c1a 50%, #4a4742 82%, #2a2724);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 18px 32px rgba(0, 0, 0, 0.45);
+      padding: 1.3rem 1.15rem 1.5rem;
+    }
+    .bio-text { font-size: 1.08rem; max-width: 42rem; }
+
+    .custom-block { padding: clamp(2.1rem, 6vw, 4.4rem) 0; }
+    .custom-grid { display: grid; gap: 1.2rem; align-items: center; }
+    .custom-photo {
+      margin: 0;
+      background: #070605;
+      border: 1px solid rgba(138, 134, 128, 0.4);
+    }
+    .custom-photo img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+    @media (min-width: 720px) {
+      .custom-grid.has-photo { grid-template-columns: 1.05fr 0.95fr; }
+    }
+
+    .rotterdam-layout { display: grid; gap: 1.2rem; }
+    .rotterdam-copy { color: var(--muted); display: grid; gap: 0.8rem; }
+    form { display: grid; gap: 0.8rem; }
+    label {
+      font-size: 0.76rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    input[type="email"] {
+      width: 100%;
+      min-height: 3.15rem;
+      border: 1px solid var(--steel-dark);
+      background: #120f0d;
+      color: var(--smoke);
+      padding: 0.75rem 0.9rem;
+      font-size: 1rem;
+    }
+    .form-note, .form-status { font-size: 0.92rem; color: var(--muted); }
+    .form-status[data-state="error"] { color: #ff8a80; }
+    .form-status[data-state="ready"] { color: #ffccbc; }
+
+    .site-footer {
+      border-top: 1px solid rgba(138, 134, 128, 0.35);
+      padding: 1.5rem 0 2.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      color: var(--muted);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+    }
+    .footer-seal {
+      width: 2.4rem;
+      height: 2.4rem;
+      border-radius: 50%;
+      animation: spin 20s linear infinite;
+    }
+
+    dialog {
+      border: 1px solid var(--gold);
+      background: #0c0a09;
+      padding: 0.6rem;
+      max-width: min(92vw, 52rem);
+    }
+    dialog::backdrop { background: rgba(0, 0, 0, 0.82); }
+    dialog img { max-height: 80vh; width: 100%; object-fit: contain; }
+    dialog menu { display: flex; justify-content: flex-end; margin: 0.4rem 0 0; }
+
+    .reveal { opacity: 0.001; transform: translateY(28px); }
+    .reveal.is-in { opacity: 1; transform: none; transition: opacity 0.6s ease, transform 0.6s ease; }
+
+    @supports (animation-timeline: view()) {
+      .reveal {
+        opacity: 1;
+        transform: none;
+        animation: rise linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 35%;
+      }
+      .mystic-photo img, .revolt-stage img {
+        animation: none;
+      }
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(36px); }
+      to { opacity: 1; transform: none; }
+    }
+    @keyframes ken {
+      from { transform: scale(1.04); }
+      to { transform: scale(1.1); }
+    }
+    @keyframes ken-view {
+      from { transform: scale(1.05); }
+      to { transform: scale(1.1); }
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes marquee { to { transform: translateX(-50%); } }
+    @keyframes glitch {
+      0% { transform: translate(0); filter: none; }
+      30% { transform: translate(-4px, 1px); filter: drop-shadow(3px 0 var(--ember)) drop-shadow(-3px 0 #2ad4ff); }
+      60% { transform: translate(3px, -1px); }
+      100% { transform: translate(0); filter: none; }
+    }
+
+    @media (min-width: 720px) {
+      .header-cta { display: inline-flex; }
+      .hero { overflow: hidden; }
+      .hero-seal { display: block; }
+      .hero-grid {
+        grid-template-columns: 1.05fr 0.95fr;
+        align-items: center;
+      }
+      .hero-actions { max-width: 26rem; }
+      .shot-caption { padding: 0.5rem 1.4rem 0.85rem; }
+      .shot-frame { padding: 0.7rem 1.2rem 0; }
+      .gallery-dots { right: 1rem; }
+      .mystic-grid { grid-template-columns: 0.9fr 1.1fr; }
+      .rotterdam-layout { grid-template-columns: 1.1fr 0.9fr; }
+    }
+    @media (min-width: 1024px) {
+      .nav-toggle summary { display: none; }
+      .nav-toggle { position: static; }
+      .nav-toggle[open] .site-nav,
+      .site-nav {
+        position: static;
+        display: flex;
+        min-width: 0;
+        background: transparent;
+        border: 0;
+        padding: 0;
+        gap: 0.1rem;
+      }
+      .site-nav a { padding: 0.5rem 0.65rem; min-height: 2.4rem; font-size: 0.72rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+      .reveal, .reveal.is-in { opacity: 1; transform: none; }
+      .shot, .shot.is-on { animation: none !important; transform: none; filter: none; }
+      .gallery-frame.is-slapping::after { animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#presave">Ir a Pre-Save en Spotify</a>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="scan" aria-hidden="true"></div>
+  <canvas id="sparks" aria-hidden="true"></canvas>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#inicio">
+        <img class="brand-seal" data-bind-src="brand.seal" src="img/logo-seal-fire.jpg" alt="">
+        <span class="brand-copy">
+          <span class="brand-name" data-bind="brand.name">Zud•AkA</span>
+          <span class="brand-tag" data-bind="brand.tagline">El Gocho Divergente</span>
+        </span>
+      </a>
+      <details class="nav-toggle">
+        <summary aria-label="Abrir menú">Menú</summary>
+        <nav class="site-nav" aria-label="Principal">
+          <a href="#inicio">Inicio</a>
+          <a href="#video">Vídeo</a>
+          <a href="#fotos">Fotos</a>
+          <a href="#mystic">El inicio</a>
+          <a href="#revolt">Revuelta</a>
+          <a href="#historia">Historia</a>
+          <a href="#rotterdam">Rotterdam</a>
+        </nav>
+      </details>
+      <a class="btn btn-fire header-cta" data-bind-href="presave.href" href="#">Pre-Save</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="inicio" data-section="hero" aria-labelledby="hero-title">
+      <img class="hero-seal" data-bind-src="brand.seal" src="img/logo-seal-fire.jpg" alt="">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="stamp" data-bind="hero.kicker">Próximo lanzamiento</p>
+          <h1 id="hero-title" class="visually-hidden" data-bind="brand.name">Zud•AkA</h1>
+          <img class="hero-logo" data-bind-src="brand.logo" src="img/logo-wordmark.jpg" alt="Zud•AkA">
+          <p class="hero-tag" data-bind="brand.tagline">El Gocho Divergente</p>
+          <p class="hero-copy" data-bind="hero.copy">El próximo lanzamiento está al frente. Pre-Save es la acción principal.</p>
+          <div class="hero-actions">
+            <a class="btn btn-fire" id="presave" data-bind-href="presave.href" href="#" aria-label="Pre-Save en Spotify">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M12 1.5C6.2 1.5 1.5 6.2 1.5 12S6.2 22.5 12 22.5 22.5 17.8 22.5 12 17.8 1.5 12 1.5zm4.86 15.16c-.19.31-.59.41-.9.22-2.47-1.51-5.58-1.85-9.24-1.01-.35.08-.7-.14-.78-.49-.08-.35.14-.7.49-.78 4.02-.92 7.45-.53 10.22 1.17.31.19.41.59.21.89zm1.3-2.89c-.24.38-.74.5-1.12.27-2.83-1.74-7.14-2.24-10.49-1.23-.43.13-.88-.11-1.01-.54-.13-.43.11-.88.54-1.01 3.84-1.16 8.61-.6 11.88 1.41.38.23.5.74.2 1.1zm.11-3.01c-3.39-2.01-8.99-2.2-12.23-1.22-.52.16-1.07-.14-1.23-.66-.16-.52.14-1.07.66-1.23 3.71-1.12 9.86-.91 13.74 1.4.47.28.62.88.34 1.35-.28.47-.88.62-1.28.36z"/>
+              </svg>
+              <span data-bind="presave.label">Pre-Save en Spotify</span>
+            </a>
+            <nav class="hero-socials" aria-label="Redes">
+              <a class="social" data-bind-href="social.tiktok" href="#" aria-label="TikTok">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M19.6 7.4c-1.7-.1-3.2-.9-4.2-2.1V15a5.4 5.4 0 1 1-5.4-5.4h.9v2.7h-.9A2.7 2.7 0 1 0 12.7 15V3h2.6c.4 1.9 1.8 3.5 3.6 4.2v2.6c-.3 0-.5 0-.8-.1-.5-.1-1-.3-1.5-.5v.2z"/></svg>
+                <span>TikTok</span>
+              </a>
+              <a class="social" data-bind-href="social.instagram" href="#" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 3h8a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8a5 5 0 0 1 5-5zm8 1.8H8A3.2 3.2 0 0 0 4.8 8v8A3.2 3.2 0 0 0 8 19.2h8A3.2 3.2 0 0 0 19.2 16V8A3.2 3.2 0 0 0 16 4.8zM12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 1.8A2.2 2.2 0 1 0 14.2 12 2.2 2.2 0 0 0 12 9.8zm5.2-3.3a1 1 0 1 1-1 1 1 1 0 0 1 1-1z"/></svg>
+                <span>Instagram</span>
+              </a>
+              <a class="social" data-bind-href="social.youtube" href="#" aria-label="YouTube">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M23 12.2s0-3.3-.4-4.7a2.9 2.9 0 0 0-2-2.1C18.8 5 12 5 12 5s-6.8 0-8.6.4a2.9 2.9 0 0 0-2 2.1C1 8.9 1 12.2 1 12.2s0 3.3.4 4.7a2.9 2.9 0 0 0 2 2.1c1.8.4 8.6.4 8.6.4s6.8 0 8.6-.4a2.9 2.9 0 0 0 2-2.1c.4-1.4.4-4.7.4-4.7zM9.8 15.6V8.8l6.5 3.4-6.5 3.4z"/></svg>
+                <span>YouTube</span>
+              </a>
+            </nav>
+          </div>
+        </div>
+        <figure class="hero-visual">
+          <img data-bind-src="hero.image" src="img/selfie.jpg" alt="Zud•AkA">
+        </figure>
+      </div>
+    </section>
+
+    <div class="marquee" id="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>Zud•AkA <b>•</b> El Gocho Divergente <b>•</b> El inicio <b>•</b> Records <b>•</b> Rotterdam <b>•</b> Acero y fuego <b>•</b></span>
+        <span>Zud•AkA <b>•</b> El Gocho Divergente <b>•</b> El inicio <b>•</b> Records <b>•</b> Rotterdam <b>•</b> Acero y fuego <b>•</b></span>
+      </div>
+    </div>
+
+    <section id="video" data-section="video" aria-labelledby="video-title">
+      <div class="wrap">
+        <p class="kicker">Multimedia</p>
+        <h2 class="section-title" id="video-title">Vídeo</h2>
+        <div class="video-stage">
+        <div class="video-frame">
+          <span class="orb orb-tl" aria-hidden="true"></span>
+          <span class="orb orb-tr" aria-hidden="true"></span>
+          <iframe
+            id="yt-player"
+            src="https://www.youtube.com/embed/VIDEO_ID"
+            title="Vídeo de Zud•AkA"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="gallery-reel" id="fotos" data-section="gallery" aria-labelledby="fotos-title">
+      <div class="wrap gallery-intro">
+        <p class="kicker">Archivo visual</p>
+        <h2 class="section-title" id="fotos-title">Fotografías</h2>
+        <p class="gallery-hint">Cursor dentro del marco · rueda para pasar fotos</p>
+      </div>
+      <div class="gallery-frame" id="gallery-frame" tabindex="0" aria-label="Galería de fotografías">
+        <div class="gallery-stage" id="gallery-grid"></div>
+        <nav class="gallery-dots" id="gallery-dots" aria-label="Fotos"></nav>
+      </div>
+    </section>
+
+    <section class="mystic" id="mystic" data-section="mystic" aria-labelledby="mystic-title">
+      <div class="wrap mystic-grid">
+        <div class="reveal">
+          <p class="kicker" data-bind="mystic.kicker">Sigilo</p>
+          <h2 class="section-title" id="mystic-title" data-bind="mystic.title">El inicio</h2>
+          <p class="hero-copy" data-bind="mystic.copy">La marca se proyecta sobre la piel. Acero, fuego y un ciclo que vuelve a empezar.</p>
+          <p class="chant" aria-hidden="true">el inicio el inicio el inicio el inicio</p>
+        </div>
+        <figure class="mystic-photo reveal">
+          <img data-bind-src="mystic.image" src="img/inicio.jpg" alt="Zud•AkA">
+          <svg class="sigil" viewBox="0 0 200 200" aria-hidden="true">
+            <g fill="none" stroke="#ff4a12" stroke-width="1.2">
+              <circle cx="100" cy="100" r="80"/>
+              <circle cx="100" cy="100" r="48"/>
+              <circle cx="100" cy="52" r="48"/>
+              <circle cx="100" cy="148" r="48"/>
+              <circle cx="58.5" cy="76" r="48"/>
+              <circle cx="141.5" cy="76" r="48"/>
+              <circle cx="58.5" cy="124" r="48"/>
+              <circle cx="141.5" cy="124" r="48"/>
+            </g>
+          </svg>
+        </figure>
+      </div>
+    </section>
+
+    <div class="hazard" id="hazard-revolt" aria-hidden="true"></div>
+
+    <section id="revolt" data-section="revolt" aria-labelledby="revolt-title">
+      <div class="revolt-stage">
+        <img data-bind-src="revolt.image" src="img/revolt.jpg" alt="Zud•AkA">
+        <div class="revolt-caption wrap">
+          <p class="kicker" data-bind="revolt.kicker">Revuelta</p>
+          <h2 class="section-title" id="revolt-title" data-bind="revolt.title">Mientras arde</h2>
+          <p data-bind="revolt.copy">Sentado frente al incendio. El periódico en la mano, el desierto como testigo.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="historia" data-section="bio" aria-labelledby="historia-title">
+      <div class="wrap">
+        <p class="kicker">Proyecto</p>
+        <h2 class="section-title" id="historia-title">Historia</h2>
+        <div class="bio-plate reveal">
+          <p class="bio-text" data-bind="bio">[BIOGRAFIA_CORTA]</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="hazard" id="hazard-rotterdam" aria-hidden="true"></div>
+
+    <section id="rotterdam" data-section="rotterdam" aria-labelledby="rotterdam-title">
+      <div class="wrap rotterdam-layout">
+        <div>
+          <p class="kicker" data-bind="rotterdam.kicker">Captación</p>
+          <h2 class="section-title" id="rotterdam-title" data-bind="rotterdam.title">Rotterdam</h2>
+          <div class="rotterdam-copy" data-bind-list="rotterdam.paragraphs">
+            <p>Rotterdam forma parte de la proyección del proyecto artístico Zud•AkA — El Gocho Divergente.</p>
+            <p>Deja tu correo electrónico para guardar el contacto y poder comunicar información relacionada con el proyecto y Rotterdam.</p>
+            <p>Este formulario está preparado para conectarse a un servicio de captación. Mientras esa integración no exista, el envío no almacena el correo.</p>
+          </div>
+        </div>
+        <form class="form-plate" id="rotterdam-form" method="post" action="">
+          <label for="email">Correo electrónico</label>
+          <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required spellcheck="false">
+          <button class="btn btn-fire" type="submit" data-bind="rotterdam.button">Guardar contacto</button>
+          <p class="form-note" data-bind="rotterdam.note">El correo se usará para guardar el contacto y comunicar información del proyecto y de Rotterdam.</p>
+          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap site-footer">
+      <span>Zud•AkA — El Gocho Divergente</span>
+      <img class="footer-seal" src="img/logo-seal-zk.jpg" alt="">
+    </div>
+  </footer>
+
+  <dialog id="lightbox" aria-label="Fotografía">
+    <img id="lightbox-img" alt="">
+    <menu>
+      <button class="btn" type="button" id="lightbox-close">Cerrar</button>
+    </menu>
+  </dialog>
+
+  <style>
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+  </style>
+  <script src="app.js"></script>
+  <script>ZudAka.bootPublic();</script>
+</body>
+</html>

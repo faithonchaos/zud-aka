@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0908">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin — Zud•AkA</title>
+  <link rel="icon" href="img/logo-seal-zk.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0908;
+      --ember: #ff4a12;
+      --gold: #c9a227;
+      --smoke: #ece7dc;
+      --muted: #b7b1a6;
+      --line: #3a3835;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Oswald", "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--smoke);
+      line-height: 1.4;
+    }
+    a { color: var(--gold); }
+    h1, h2 { margin: 0 0 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    .wrap { width: min(100% - 2rem, 58rem); margin: 1.2rem auto 3rem; }
+    .card {
+      border: 1px solid var(--line);
+      background: #14110f;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      scroll-margin-top: 4.5rem;
+    }
+    .jump {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem 0.8rem;
+      margin: 0 0 1rem;
+      font-size: 0.82rem;
+    }
+    .jump a { text-transform: uppercase; letter-spacing: 0.08em; }
+    .social-lab {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .social-lab svg {
+      width: 1.2rem;
+      height: 1.2rem;
+      fill: currentColor;
+      flex-shrink: 0;
+    }
+    label { display: grid; gap: 0.35rem; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.75rem; }
+    input, textarea, select {
+      width: 100%;
+      min-height: 2.8rem;
+      border: 1px solid var(--line);
+      background: #0f0d0b;
+      color: var(--smoke);
+      padding: 0.55rem 0.7rem;
+      font: inherit;
+    }
+    textarea { min-height: 7rem; resize: vertical; }
+    .item textarea { min-height: 4.2rem; }
+    .field { display: grid; gap: 0.35rem; margin-bottom: 0.75rem; }
+    .field-lab { margin: 0; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; }
+    .row { display: grid; gap: 0.6rem; }
+    @media (min-width: 720px) { .row-2 { grid-template-columns: 1fr 1fr; } }
+    .btn {
+      min-height: 2.9rem;
+      border: 0;
+      padding: 0.6rem 1rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+      background: linear-gradient(180deg, #ff6a32, var(--ember));
+      color: #fff;
+    }
+    .btn-gold { background: linear-gradient(180deg, #ffce55, var(--gold)); color: #140800; }
+    .btn-ghost { background: #241f1b; color: var(--smoke); border: 1px solid var(--line); }
+    .actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.4rem 0 1rem; }
+    .note {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin: 0 0 1rem;
+    }
+    .warn {
+      border: 1px solid var(--ember);
+      padding: 0.8rem 1rem;
+      color: #ffccbc;
+      margin-bottom: 1rem;
+    }
+    .ok { color: #b7f7c2; }
+    .err { color: #ff8a80; }
+    .thumb {
+      width: 4.2rem;
+      height: 4.2rem;
+      object-fit: cover;
+      border: 1px solid var(--line);
+    }
+    .item {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.7rem;
+      align-items: start;
+      border-top: 1px solid var(--line);
+      padding-top: 0.8rem;
+      margin-top: 0.8rem;
+    }
+    .hidden { display: none !important; }
+    header.bar {
+      position: sticky;
+      top: 0;
+      background: rgba(10, 9, 8, 0.94);
+      border-bottom: 1px solid var(--line);
+      padding: 0.7rem 0;
+      z-index: 5;
+    }
+    .bar-inner { width: min(100% - 2rem, 58rem); margin: 0 auto; display: flex; justify-content: space-between; gap: 0.7rem; align-items: center; }
+    .lib-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(7.2rem, 1fr));
+      gap: 0.55rem;
+      margin-bottom: 0.8rem;
+    }
+    .lib-card {
+      border: 1px solid var(--line);
+      background: #0f0d0b;
+      padding: 0.35rem;
+      display: grid;
+      gap: 0.3rem;
+    }
+    .lib-card img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+    }
+    .lib-card span {
+      font-size: 0.68rem;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .lib-card button { min-height: 2rem; font-size: 0.68rem; padding: 0.2rem; }
+  </style>
+</head>
+<body>
+  <div id="login-view" class="wrap">
+    <h1>Panel Zud•AkA</h1>
+    <p class="note">Este panel es para el artista. No es un login de internet todavía: guarda los cambios en este navegador y puede exportar un archivo para publicarlos.</p>
+    <form class="card" id="login-form">
+      <label>Clave
+        <input id="password" type="password" autocomplete="current-password" required>
+      </label>
+      <button class="btn" type="submit">Entrar</button>
+      <p class="err" id="login-error"></p>
+    </form>
+  </div>
+
+  <div id="app-view" class="hidden">
+    <header class="bar">
+      <div class="bar-inner">
+        <strong>Admin Zud•AkA</strong>
+        <span>
+          <a href="index.html" target="_blank" rel="noopener">Ver web</a>
+          &nbsp;·&nbsp;
+          <button class="btn-ghost" type="button" id="logout">Salir</button>
+        </span>
+      </div>
+    </header>
+    <div class="wrap">
+      <div class="warn">
+        Los cambios se guardan en este ordenador y este navegador. Para que el público los vea en internet hace falta subir el sitio al dominio y, si quieres un editor real, conectarlo después. Mientras tanto: edita, pulsa Guardar, y usa Exportar para descargar <code>content.json</code>.
+      </div>
+      <p id="save-status" class="note" role="status"></p>
+
+      <div class="actions">
+        <button class="btn" type="button" id="save">Guardar</button>
+        <button class="btn-gold" type="button" id="export">Exportar content.json</button>
+        <button class="btn-ghost" type="button" id="reset">Volver al archivo original</button>
+      </div>
+      <nav class="jump" aria-label="Saltar a">
+        <a href="#admin-tape">Cinta Acero y fuego</a>
+        <a href="#admin-social">TikTok / Instagram / YouTube</a>
+        <a href="#admin-gallery">Fotos</a>
+        <a href="#admin-blocks">Secciones extra</a>
+        <a href="#admin-pass">Cambiar clave</a>
+      </nav>
+
+      <section class="card" id="admin-tape">
+        <h2>Cinta Acero y fuego</h2>
+        <p class="note">El texto que se mueve de lado a lado debajo del inicio. Una frase por línea.</p>
+        <label>Textos de la cinta <textarea id="marquee"></textarea></label>
+      </section>
+
+      <section class="card" id="admin-social">
+        <h2>Redes (cabecera)</h2>
+        <p class="note">Enlaces de TikTok, Instagram y YouTube, debajo del botón Pre-Save. Pega la URL completa. Si dejas #, el icono se ve pero aún no lleva a la red.</p>
+        <label>
+          <span class="social-lab">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.6 7.4c-1.7-.1-3.2-.9-4.2-2.1V15a5.4 5.4 0 1 1-5.4-5.4h.9v2.7h-.9A2.7 2.7 0 1 0 12.7 15V3h2.6c.4 1.9 1.8 3.5 3.6 4.2v2.6c-.3 0-.5 0-.8-.1-.5-.1-1-.3-1.5-.5v.2z"/></svg>
+            TikTok
+          </span>
+          <input id="social.tiktok" type="text" inputmode="url" placeholder="https://www.tiktok.com/@...">
+        </label>
+        <label>
+          <span class="social-lab">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 3h8a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8a5 5 0 0 1 5-5zm8 1.8H8A3.2 3.2 0 0 0 4.8 8v8A3.2 3.2 0 0 0 8 19.2h8A3.2 3.2 0 0 0 19.2 16V8A3.2 3.2 0 0 0 16 4.8zM12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 1.8A2.2 2.2 0 1 0 14.2 12 2.2 2.2 0 0 0 12 9.8zm5.2-3.3a1 1 0 1 1-1 1 1 1 0 0 1 1-1z"/></svg>
+            Instagram
+          </span>
+          <input id="social.instagram" type="text" inputmode="url" placeholder="https://www.instagram.com/...">
+        </label>
+        <label>
+          <span class="social-lab">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M23 12.2s0-3.3-.4-4.7a2.9 2.9 0 0 0-2-2.1C18.8 5 12 5 12 5s-6.8 0-8.6.4a2.9 2.9 0 0 0-2 2.1C1 8.9 1 12.2 1 12.2s0 3.3.4 4.7a2.9 2.9 0 0 0 2 2.1c1.8.4 8.6.4 8.6.4s6.8 0 8.6-.4a2.9 2.9 0 0 0 2-2.1c.4-1.4.4-4.7.4-4.7zM9.8 15.6V8.8l6.5 3.4-6.5 3.4z"/></svg>
+            YouTube
+          </span>
+          <input id="social.youtube" type="text" inputmode="url" placeholder="https://www.youtube.com/...">
+        </label>
+      </section>
+
+      <section class="card">
+        <h2>Marca</h2>
+        <div class="row row-2">
+          <label>Nombre <input id="brand.name"></label>
+          <label>Lema <input id="brand.tagline"></label>
+        </div>
+        <div class="row row-2">
+          <label>Logo principal <select class="library" id="brand.logo"></select></label>
+          <label>Sello <select class="library" id="brand.seal"></select></label>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Pre-Save</h2>
+        <div class="row row-2">
+          <label>Texto del botón <input id="presave.label"></label>
+          <label>Enlace (usa # hasta tener el de Spotify) <input id="presave.href"></label>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Primera pantalla</h2>
+        <label>Sello / kicker <input id="hero.kicker"></label>
+        <label>Texto <textarea id="hero.copy"></textarea></label>
+        <label>Foto <select class="library" id="hero.image"></select></label>
+      </section>
+
+      <section class="card">
+        <h2>Vídeo</h2>
+        <label>ID de YouTube <input id="videoId"></label>
+        <p class="note">Solo el ID, por ejemplo VIDEO_ID. No pongas la URL completa.</p>
+      </section>
+
+      <section class="card">
+        <h2>Librería de fotos</h2>
+        <p class="note">Sube imágenes para poder elegirlas en el hero, la galería u otras secciones. Se comprimen en el navegador. Guarda después de subir.</p>
+        <div class="lib-grid" id="library-grid"></div>
+        <label>Subir a la librería
+          <input id="upload-library" type="file" accept="image/*" multiple>
+        </label>
+      </section>
+
+      <section class="card" id="admin-gallery">
+        <h2>Fotografías</h2>
+        <p class="note">El texto de cada foto aparece en el marco de la galería. Escribe aquí; el cursor se queda en el campo. Reordena con subir/bajar.</p>
+        <div id="gallery-list"></div>
+        <div class="actions">
+          <select id="add-from-library" class="library"></select>
+          <button class="btn-ghost" type="button" id="add-photo">Añadir de la librería</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>El inicio</h2>
+        <label>Kicker <input id="mystic.kicker"></label>
+        <label>Título <input id="mystic.title"></label>
+        <label>Texto <textarea id="mystic.copy"></textarea></label>
+        <label>Foto <select class="library" id="mystic.image"></select></label>
+      </section>
+
+      <section class="card">
+        <h2>Revuelta</h2>
+        <label>Kicker <input id="revolt.kicker"></label>
+        <label>Título <input id="revolt.title"></label>
+        <label>Texto <textarea id="revolt.copy"></textarea></label>
+        <label>Foto <select class="library" id="revolt.image"></select></label>
+      </section>
+
+      <section class="card">
+        <h2>Historia</h2>
+        <label>Biografía <textarea id="bio"></textarea></label>
+      </section>
+
+      <section class="card">
+        <h2>Rotterdam</h2>
+        <label>Kicker <input id="rotterdam.kicker"></label>
+        <label>Título <input id="rotterdam.title"></label>
+        <label>Párrafos (uno por línea) <textarea id="rotterdam.paragraphs"></textarea></label>
+        <label>Botón <input id="rotterdam.button"></label>
+        <label>Nota <textarea id="rotterdam.note"></textarea></label>
+      </section>
+
+      <section class="card" id="admin-blocks">
+        <h2>Secciones extra</h2>
+        <p class="note">Crea bloques nuevos (título, texto y foto opcional). Aparecen en la web en el orden de abajo.</p>
+        <div id="blocks-list"></div>
+        <button class="btn" type="button" id="add-block">Añadir sección</button>
+      </section>
+
+      <section class="card">
+        <h2>Orden de secciones</h2>
+        <p class="note">Sube o baja para mover bloques en la página.</p>
+        <div id="order-list"></div>
+      </section>
+
+      <section class="card" id="admin-pass">
+        <h2>Cambiar clave</h2>
+        <p class="note">La clave actual es la que usas para entrar. Escribe la nueva, pulsa Actualizar clave y luego Guardar. Si vas a publicar la web, pulsa también Exportar content.json y sustituye ese archivo en la carpeta del sitio.</p>
+        <label>Nueva clave <input id="new-pass" type="password" autocomplete="new-password"></label>
+        <button class="btn-ghost" type="button" id="set-pass">Actualizar clave</button>
+      </section>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    (function () {
+      var content = null;
+      var CORE = {
+        hero: "Inicio",
+        video: "Vídeo",
+        gallery: "Fotos",
+        mystic: "El inicio",
+        revolt: "Revuelta",
+        bio: "Historia",
+        rotterdam: "Rotterdam"
+      };
+      var fields = [
+        "brand.name", "brand.tagline", "brand.logo", "brand.seal",
+        "presave.label", "presave.href",
+        "social.tiktok", "social.instagram", "social.youtube",
+        "hero.kicker", "hero.copy", "hero.image",
+        "videoId", "bio",
+        "mystic.kicker", "mystic.title", "mystic.copy", "mystic.image",
+        "revolt.kicker", "revolt.title", "revolt.copy", "revolt.image",
+        "rotterdam.kicker", "rotterdam.title", "rotterdam.button", "rotterdam.note"
+      ];
+
+      function status(msg, ok) {
+        var el = document.getElementById("save-status");
+        el.textContent = msg;
+        el.className = ok ? "ok" : "note";
+      }
+
+      function libLabel(src, index) {
+        if (!src) return "";
+        if (src.indexOf("data:") === 0) return "Subida " + (index + 1);
+        return src.replace(/^img\//, "");
+      }
+
+      function fillLibraries() {
+        document.querySelectorAll("select.library").forEach(function (sel) {
+          var current = sel.value;
+          var optional = sel.hasAttribute("data-optional");
+          sel.innerHTML = "";
+          if (optional) {
+            var none = document.createElement("option");
+            none.value = "";
+            none.textContent = "(sin foto)";
+            sel.appendChild(none);
+          }
+          (content.library || []).forEach(function (src, i) {
+            var opt = document.createElement("option");
+            opt.value = src;
+            opt.textContent = libLabel(src, i);
+            sel.appendChild(opt);
+          });
+          sel.value = current;
+        });
+      }
+
+      function renderLibrary() {
+        var box = document.getElementById("library-grid");
+        box.innerHTML = "";
+        (content.library || []).forEach(function (src, index) {
+          var card = document.createElement("div");
+          card.className = "lib-card";
+          var img = document.createElement("img");
+          img.src = src;
+          img.alt = "";
+          var cap = document.createElement("span");
+          cap.textContent = libLabel(src, index);
+          card.appendChild(img);
+          card.appendChild(cap);
+          if (src.indexOf("data:") === 0) {
+            var del = document.createElement("button");
+            del.type = "button";
+            del.className = "btn-ghost";
+            del.textContent = "Quitar";
+            del.addEventListener("click", function () {
+              readForm();
+              content.library.splice(index, 1);
+              fillLibraries();
+              renderLibrary();
+            });
+            card.appendChild(del);
+          }
+          box.appendChild(card);
+        });
+      }
+
+      function field(labelText, control) {
+        var box = document.createElement("div");
+        box.className = "field";
+        var lab = document.createElement("p");
+        lab.className = "field-lab";
+        lab.textContent = labelText;
+        box.appendChild(lab);
+        box.appendChild(control);
+        return box;
+      }
+
+      function renderGallery() {
+        var box = document.getElementById("gallery-list");
+        box.innerHTML = "";
+        (content.gallery || []).forEach(function (item, index) {
+          var wrap = document.createElement("div");
+          wrap.className = "item";
+          var img = document.createElement("img");
+          img.className = "thumb";
+          img.src = item.src;
+          img.alt = "";
+          var col = document.createElement("div");
+          var src = document.createElement("select");
+          src.className = "library";
+          src.setAttribute("data-g", "src");
+          src.setAttribute("data-i", String(index));
+          var ta = document.createElement("textarea");
+          ta.setAttribute("data-g", "text");
+          ta.setAttribute("data-i", String(index));
+          ta.value = item.text || "";
+          var alt = document.createElement("input");
+          alt.setAttribute("data-g", "alt");
+          alt.setAttribute("data-i", String(index));
+          alt.value = item.alt || "";
+          col.appendChild(field("Foto", src));
+          col.appendChild(field("Texto en la foto", ta));
+          col.appendChild(field("Texto alternativo", alt));
+          var actions = document.createElement("div");
+          actions.className = "actions";
+          [["up", "Subir"], ["down", "Bajar"], ["del", "Quitar"]].forEach(function (pair) {
+            var b = document.createElement("button");
+            b.type = "button";
+            b.className = "btn-ghost";
+            b.setAttribute("data-" + pair[0], String(index));
+            b.textContent = pair[1];
+            actions.appendChild(b);
+          });
+          col.appendChild(actions);
+          wrap.appendChild(img);
+          wrap.appendChild(col);
+          box.appendChild(wrap);
+        });
+        fillLibraries();
+        box.querySelectorAll("select[data-g='src']").forEach(function (sel) {
+          var i = Number(sel.getAttribute("data-i"));
+          if (content.gallery[i]) sel.value = content.gallery[i].src;
+        });
+      }
+
+      function renderBlocks() {
+        var box = document.getElementById("blocks-list");
+        box.innerHTML = "";
+        if (!content.blocks) content.blocks = [];
+        content.blocks.forEach(function (block, index) {
+          var wrap = document.createElement("div");
+          wrap.className = "item";
+          wrap.style.gridTemplateColumns = "1fr";
+          var kicker = document.createElement("input");
+          kicker.setAttribute("data-b", "kicker");
+          kicker.setAttribute("data-i", String(index));
+          kicker.value = block.kicker || "";
+          var title = document.createElement("input");
+          title.setAttribute("data-b", "title");
+          title.setAttribute("data-i", String(index));
+          title.value = block.title || "";
+          var copy = document.createElement("textarea");
+          copy.setAttribute("data-b", "copy");
+          copy.setAttribute("data-i", String(index));
+          copy.value = block.copy || "";
+          var image = document.createElement("select");
+          image.className = "library";
+          image.setAttribute("data-optional", "1");
+          image.setAttribute("data-b", "image");
+          image.setAttribute("data-i", String(index));
+          wrap.appendChild(field("Kicker", kicker));
+          wrap.appendChild(field("Título", title));
+          wrap.appendChild(field("Texto", copy));
+          wrap.appendChild(field("Foto", image));
+          var actions = document.createElement("div");
+          actions.className = "actions";
+          var del = document.createElement("button");
+          del.type = "button";
+          del.className = "btn-ghost";
+          del.setAttribute("data-block-del", String(index));
+          del.textContent = "Quitar sección";
+          actions.appendChild(del);
+          wrap.appendChild(actions);
+          box.appendChild(wrap);
+        });
+        fillLibraries();
+        box.querySelectorAll("select[data-b='image']").forEach(function (sel) {
+          var i = Number(sel.getAttribute("data-i"));
+          if (content.blocks[i]) sel.value = content.blocks[i].image || "";
+        });
+      }
+
+      function blockTitle(id) {
+        if (CORE[id]) return CORE[id];
+        var found = (content.blocks || []).filter(function (b) { return b.id === id; })[0];
+        return found && found.title ? found.title : id;
+      }
+
+      function renderOrder() {
+        var box = document.getElementById("order-list");
+        box.innerHTML = "";
+        (content.sectionOrder || []).forEach(function (id, index) {
+          var row = document.createElement("div");
+          row.className = "actions";
+          var name = document.createElement("span");
+          name.textContent = blockTitle(id);
+          name.style.flex = "1";
+          var up = document.createElement("button");
+          up.type = "button";
+          up.className = "btn-ghost";
+          up.setAttribute("data-ord-up", String(index));
+          up.textContent = "Subir";
+          var down = document.createElement("button");
+          down.type = "button";
+          down.className = "btn-ghost";
+          down.setAttribute("data-ord-down", String(index));
+          down.textContent = "Bajar";
+          row.appendChild(name);
+          row.appendChild(up);
+          row.appendChild(down);
+          box.appendChild(row);
+        });
+      }
+
+      function fillForm() {
+        if (!content.blocks) content.blocks = [];
+        fields.forEach(function (path) {
+          var el = document.getElementById(path);
+          if (!el) return;
+          var value = ZudAka.getPath(content, path);
+          el.value = value == null ? "" : value;
+        });
+        document.getElementById("rotterdam.paragraphs").value = (content.rotterdam.paragraphs || []).join("\n");
+        document.getElementById("marquee").value = (content.marquee || []).join("\n");
+        fillLibraries();
+        fields.forEach(function (path) {
+          var el = document.getElementById(path);
+          if (!el) return;
+          var value = ZudAka.getPath(content, path);
+          if (el.tagName === "SELECT" && value) el.value = value;
+        });
+        renderLibrary();
+        renderGallery();
+        renderBlocks();
+        renderOrder();
+      }
+
+      function readForm() {
+        fields.forEach(function (path) {
+          var el = document.getElementById(path);
+          if (el) ZudAka.setPath(content, path, el.value);
+        });
+        content.rotterdam.paragraphs = document.getElementById("rotterdam.paragraphs").value.split(/\n+/).map(function (s) { return s.trim(); }).filter(Boolean);
+        content.marquee = document.getElementById("marquee").value.split(/\n+/).map(function (s) { return s.trim(); }).filter(Boolean);
+        document.querySelectorAll("[data-g]").forEach(function (el) {
+          var i = Number(el.getAttribute("data-i"));
+          if (content.gallery[i]) content.gallery[i][el.getAttribute("data-g")] = el.value;
+        });
+        document.querySelectorAll("[data-b]").forEach(function (el) {
+          var i = Number(el.getAttribute("data-i"));
+          if (content.blocks[i]) content.blocks[i][el.getAttribute("data-b")] = el.value;
+        });
+      }
+
+      function persist() {
+        readForm();
+        if (!ZudAka.saveContent(content)) {
+          status("No cabe en el navegador. Quita alguna foto subida o exporta el archivo.");
+          return false;
+        }
+        return true;
+      }
+
+      function showApp() {
+        document.getElementById("login-view").classList.add("hidden");
+        document.getElementById("app-view").classList.remove("hidden");
+        fillForm();
+      }
+
+      document.getElementById("login-form").addEventListener("submit", function (event) {
+        event.preventDefault();
+        var pass = document.getElementById("password").value;
+        ZudAka.loadContent().then(function (data) {
+          content = data;
+          return ZudAka.sha256(pass).then(function (hash) {
+            if (hash !== data.admin.passwordSha256) {
+              document.getElementById("login-error").textContent = "Clave incorrecta.";
+              return;
+            }
+            ZudAka.setAuthed(true);
+            showApp();
+          });
+        }).catch(function () {
+          document.getElementById("login-error").textContent = "No se pudo cargar content.json. Abre el admin desde el servidor local, no como archivo suelto.";
+        });
+      });
+
+      document.getElementById("logout").addEventListener("click", function () {
+        ZudAka.setAuthed(false);
+        location.reload();
+      });
+
+      document.getElementById("save").addEventListener("click", function () {
+        if (persist()) status("Guardado en este navegador. Abre la web para verlo.", true);
+      });
+
+      document.getElementById("export").addEventListener("click", function () {
+        if (!persist()) return;
+        ZudAka.exportContent(content);
+        status("Archivo descargado. Sustituye content.json en la carpeta del sitio cuando publiques.", true);
+      });
+
+      document.getElementById("reset").addEventListener("click", function () {
+        ZudAka.resetLocalContent();
+        ZudAka.loadFileContent().then(function (data) {
+          content = data;
+          fillForm();
+          status("Contenido restaurado desde content.json.");
+        });
+      });
+
+      document.getElementById("gallery-list").addEventListener("input", function (event) {
+        var el = event.target;
+        if (!el.getAttribute || !el.getAttribute("data-g")) return;
+        var i = Number(el.getAttribute("data-i"));
+        if (content.gallery[i]) content.gallery[i][el.getAttribute("data-g")] = el.value;
+      });
+
+      document.getElementById("gallery-list").addEventListener("click", function (event) {
+        if (event.target.closest("textarea, input, select, .field")) return;
+        var btn = event.target.closest("[data-up], [data-down], [data-del]");
+        if (!btn) return;
+        readForm();
+        var up = btn.getAttribute("data-up");
+        var down = btn.getAttribute("data-down");
+        var del = btn.getAttribute("data-del");
+        if (up != null) {
+          var i = Number(up);
+          if (i > 0) {
+            var t = content.gallery[i - 1];
+            content.gallery[i - 1] = content.gallery[i];
+            content.gallery[i] = t;
+          }
+        }
+        if (down != null) {
+          var j = Number(down);
+          if (j < content.gallery.length - 1) {
+            var u = content.gallery[j + 1];
+            content.gallery[j + 1] = content.gallery[j];
+            content.gallery[j] = u;
+          }
+        }
+        if (del != null) content.gallery.splice(Number(del), 1);
+        renderGallery();
+      });
+
+      document.getElementById("add-photo").addEventListener("click", function () {
+        var src = document.getElementById("add-from-library").value;
+        if (!src) return;
+        readForm();
+        content.gallery.push({ src: src, alt: content.brand.name, text: "" });
+        renderGallery();
+      });
+
+      document.getElementById("upload-library").addEventListener("change", function (event) {
+        var files = Array.prototype.slice.call(event.target.files || []);
+        if (!files.length) return;
+        readForm();
+        var chain = Promise.resolve();
+        files.forEach(function (file) {
+          chain = chain.then(function () {
+            return ZudAka.compressImage(file, 1400, 0.72).then(function (dataUrl) {
+              content.library.push(dataUrl);
+            });
+          });
+        });
+        chain.then(function () {
+          fillLibraries();
+          renderLibrary();
+          if (persist()) status("Fotos subidas a la librería. Ya puedes elegirlas en cualquier sección.", true);
+          event.target.value = "";
+        }).catch(function () {
+          status("No se pudo leer alguna imagen.");
+        });
+      });
+
+      document.getElementById("add-block").addEventListener("click", function () {
+        readForm();
+        if (!content.blocks) content.blocks = [];
+        var id = "block-" + Date.now();
+        content.blocks.push({
+          id: id,
+          kicker: "Nueva",
+          title: "Nueva sección",
+          copy: "",
+          image: ""
+        });
+        if (!content.sectionOrder) content.sectionOrder = [];
+        var at = content.sectionOrder.indexOf("rotterdam");
+        if (at >= 0) content.sectionOrder.splice(at, 0, id);
+        else content.sectionOrder.push(id);
+        renderBlocks();
+        renderOrder();
+        persist();
+        status("Sección creada. Edítala, pulsa Guardar y ábrela en la web.", true);
+      });
+
+      document.getElementById("blocks-list").addEventListener("input", function (event) {
+        var el = event.target;
+        if (!el.getAttribute || !el.getAttribute("data-b")) return;
+        var i = Number(el.getAttribute("data-i"));
+        if (content.blocks[i]) content.blocks[i][el.getAttribute("data-b")] = el.value;
+      });
+
+      document.getElementById("blocks-list").addEventListener("click", function (event) {
+        if (event.target.closest("textarea, input, select, .field")) return;
+        var btn = event.target.closest("[data-block-del]");
+        if (!btn) return;
+        readForm();
+        var i = Number(btn.getAttribute("data-block-del"));
+        var removed = content.blocks.splice(i, 1)[0];
+        if (removed) {
+          content.sectionOrder = (content.sectionOrder || []).filter(function (id) { return id !== removed.id; });
+        }
+        renderBlocks();
+        renderOrder();
+      });
+
+      document.getElementById("order-list").addEventListener("click", function (event) {
+        var up = event.target.closest("[data-ord-up]");
+        var down = event.target.closest("[data-ord-down]");
+        if (!up && !down) return;
+        readForm();
+        var order = content.sectionOrder || [];
+        if (up) {
+          var i = Number(up.getAttribute("data-ord-up"));
+          if (i > 0) {
+            var t = order[i - 1];
+            order[i - 1] = order[i];
+            order[i] = t;
+          }
+        }
+        if (down) {
+          var j = Number(down.getAttribute("data-ord-down"));
+          if (j < order.length - 1) {
+            var u = order[j + 1];
+            order[j + 1] = order[j];
+            order[j] = u;
+          }
+        }
+        renderOrder();
+      });
+
+      document.getElementById("set-pass").addEventListener("click", function () {
+        var next = document.getElementById("new-pass").value;
+        if (!next) return;
+        ZudAka.sha256(next).then(function (hash) {
+          content.admin.passwordSha256 = hash;
+          persist();
+          document.getElementById("new-pass").value = "";
+          status("Clave actualizada en este navegador. Exporta content.json para llevarla al servidor.", true);
+        });
+      });
+
+      if (ZudAka.isAuthed()) {
+        ZudAka.loadContent().then(function (data) {
+          content = data;
+          showApp();
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
