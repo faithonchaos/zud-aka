@@ -526,13 +526,52 @@
       letter-spacing: 0.03em;
       max-width: 22ch;
     }
+    .gallery-nav {
+      position: absolute;
+      top: 42%;
+      z-index: 7;
+      width: 3rem;
+      height: 3rem;
+      border: 1px solid #8a8680;
+      background: rgba(16, 14, 12, 0.75);
+      color: var(--smoke);
+      font-size: 1.8rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .gallery-nav-prev { left: 0.4rem; }
+    .gallery-nav-next { right: 0.4rem; }
+    .gallery-nav:active { border-color: var(--ember); color: var(--ember); }
+    .gallery-tap {
+      position: absolute;
+      left: 50%;
+      bottom: 3.5rem;
+      transform: translateX(-50%);
+      z-index: 7;
+      margin: 0;
+      padding: 0.38rem 0.75rem;
+      border: 1px solid var(--ember);
+      background: rgba(16, 14, 12, 0.85);
+      color: var(--ember);
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 700;
+      pointer-events: none;
+      animation: tap-pulse 1.6s ease-in-out infinite;
+    }
+    .gallery-frame.is-used .gallery-tap { display: none; }
+    @keyframes tap-pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
     .gallery-dots {
       position: absolute;
-      right: 0.7rem;
-      top: 50%;
-      transform: translateY(-50%);
+      left: 50%;
+      bottom: 0.55rem;
+      transform: translateX(-50%);
       z-index: 6;
-      display: grid;
+      display: flex;
       gap: 0.45rem;
     }
     .gallery-dot {
@@ -758,7 +797,7 @@
       .hero-actions { max-width: 26rem; }
       .shot-caption { padding: 0.5rem 1.4rem 0.85rem; }
       .shot-frame { padding: 0.7rem 1.2rem 0; }
-      .gallery-dots { right: 1rem; }
+      .gallery-dots { bottom: 0.7rem; }
       .mystic-grid { grid-template-columns: 0.9fr 1.1fr; }
       .rotterdam-layout { grid-template-columns: 1.1fr 0.9fr; }
     }
@@ -787,6 +826,7 @@
       .reveal, .reveal.is-in { opacity: 1; transform: none; }
       .shot, .shot.is-on { animation: none !important; transform: none; filter: none; }
       .gallery-frame.is-slapping::after { animation: none !important; }
+      .gallery-tap { animation: none !important; opacity: 1; }
     }
   </style>
 </head>
@@ -892,10 +932,13 @@
       <div class="wrap gallery-intro">
         <p class="kicker">Archivo visual</p>
         <h2 class="section-title" id="fotos-title">Fotografías</h2>
-        <p class="gallery-hint">Cursor dentro del marco · rueda para pasar fotos</p>
+        <p class="gallery-hint">Toca la foto para la siguiente · desliza fuera del marco para seguir bajando</p>
       </div>
       <div class="gallery-frame" id="gallery-frame" tabindex="0" aria-label="Galería de fotografías">
         <div class="gallery-stage" id="gallery-grid"></div>
+        <button type="button" class="gallery-nav gallery-nav-prev" id="gallery-prev" aria-label="Foto anterior">‹</button>
+        <button type="button" class="gallery-nav gallery-nav-next" id="gallery-next" aria-label="Foto siguiente">›</button>
+        <p class="gallery-tap" id="gallery-tap">Toca</p>
         <nav class="gallery-dots" id="gallery-dots" aria-label="Fotos"></nav>
       </div>
     </section>

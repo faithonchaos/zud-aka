@@ -205,7 +205,9 @@
     var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     var index = 0;
     var busy = false;
-    var touchY = 0;
+    var tapStart = null;
+    var prevBtn = document.getElementById("gallery-prev");
+    var nextBtn = document.getElementById("gallery-next");
 
     function paintDots() {
       if (!dots) return;
@@ -240,8 +242,11 @@
     function step(dir) {
       if (busy) return false;
       var next = index + dir;
-      if (next < 0 || next >= shots.length) return false;
+      if (next < 0) next = shots.length - 1;
+      if (next >= shots.length) next = 0;
+      if (next === index) return false;
       busy = true;
+      frame.classList.add("is-used");
       show(next, dir > 0 ? "next" : "prev");
       window.setTimeout(function () { busy = false; }, reduce ? 80 : 540);
       return true;
@@ -254,8 +259,10 @@
         b.type = "button";
         b.className = "gallery-dot" + (i === 0 ? " is-on" : "");
         b.setAttribute("aria-label", "Foto " + (i + 1));
-        b.addEventListener("click", function () {
+        b.addEventListener("click", function (event) {
+          event.stopPropagation();
           if (i === index) return;
+          frame.classList.add("is-used");
           show(i, i > index ? "next" : "prev");
         });
         dots.appendChild(b);
@@ -265,13 +272,31 @@
     frame.addEventListener("pointerenter", function () { frame.classList.add("is-hot"); });
     frame.addEventListener("pointerleave", function () { frame.classList.remove("is-hot"); });
 
-    frame.addEventListener("wheel", function (event) {
-      var goingDown = event.deltaY > 0;
-      var atEnd = goingDown ? index >= shots.length - 1 : index <= 0;
-      if (atEnd) return;
-      event.preventDefault();
-      step(goingDown ? 1 : -1);
-    }, { passive: false });
+    if (prevBtn) prevBtn.addEventListener("click", function (event) {
+      event.stopPropagation();
+      step(-1);
+    });
+    if (nextBtn) nextBtn.addEventListener("click", function (event) {
+      event.stopPropagation();
+      step(1);
+    });
+
+    frame.addEventListener("pointerdown", function (event) {
+      if (event.target.closest(".gallery-dot, .gallery-nav")) return;
+      tapStart = { x: event.clientX, y: event.clientY };
+    });
+    frame.addEventListener("pointerup", function (event) {
+      if (!tapStart) return;
+      var dx = event.clientX - tapStart.x;
+      var dy = event.clientY - tapStart.y;
+      tapStart = null;
+      if (Math.abs(dx) > 14 || Math.abs(dy) > 14) return;
+      if (event.target.closest(".gallery-dot, .gallery-nav")) return;
+      var rect = frame.getBoundingClientRect();
+      var x = event.clientX - rect.left;
+      step(x < rect.width * 0.28 ? -1 : 1);
+    });
+    frame.addEventListener("pointercancel", function () { tapStart = null; });
 
     frame.addEventListener("keydown", function (event) {
       if (event.key === "ArrowDown" || event.key === "ArrowRight") {
@@ -281,16 +306,6 @@
         if (step(-1)) event.preventDefault();
       }
     });
-
-    frame.addEventListener("touchstart", function (event) {
-      touchY = event.changedTouches[0].clientY;
-    }, { passive: true });
-
-    frame.addEventListener("touchend", function (event) {
-      var dy = touchY - event.changedTouches[0].clientY;
-      if (Math.abs(dy) < 36) return;
-      step(dy > 0 ? 1 : -1);
-    }, { passive: true });
   }
 
   function splitCopy(text) {
