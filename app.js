@@ -53,6 +53,10 @@
     if (!Array.isArray(data.library)) data.library = fileContent.library || [];
     if (!Array.isArray(data.marquee)) data.marquee = fileContent.marquee || [];
     if (!data.social) data.social = fileContent.social || { tiktok: "#", instagram: "#", youtube: "#" };
+    if (!data.rotterdam) data.rotterdam = fileContent.rotterdam || {};
+    if (!data.rotterdam.endpoint && fileContent.rotterdam && fileContent.rotterdam.endpoint) {
+      data.rotterdam.endpoint = fileContent.rotterdam.endpoint;
+    }
     return data;
   }
 
@@ -431,24 +435,56 @@
     });
   }
 
-  function bootForm() {
+  function bootForm(content) {
     var form = document.getElementById("rotterdam-form");
     var statusEl = document.getElementById("form-status");
     if (!form || !statusEl) return;
+    var endpoint = "";
+    if (content && content.rotterdam && content.rotterdam.endpoint) {
+      endpoint = String(content.rotterdam.endpoint).trim();
+    }
+    form.setAttribute("action", endpoint);
+    var next = form.querySelector("[name='_next']");
+    if (next) next.value = window.location.origin + "/?lista=1#rotterdam";
+
+    if (/(?:^|[?&])lista=1(?:&|$)/.test(window.location.search)) {
+      statusEl.dataset.state = "ready";
+      statusEl.textContent = "Contacto guardado. Gracias.";
+      form.reset();
+      if (window.history && history.replaceState) {
+        history.replaceState({}, "", window.location.pathname + "#rotterdam");
+      }
+    }
+
     form.addEventListener("submit", function (event) {
       var email = form.email.value.trim();
-      var action = (form.getAttribute("action") || "").trim();
+      var honeypot = form.website ? String(form.website.value || "").trim() : "";
+      event.preventDefault();
       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        event.preventDefault();
         statusEl.dataset.state = "error";
         statusEl.textContent = "Introduce un correo electrónico válido.";
         return;
       }
-      if (!action) {
-        event.preventDefault();
+      if (honeypot) {
         statusEl.dataset.state = "ready";
-        statusEl.textContent = "El servicio de captación aún no está conectado. El correo no se ha almacenado.";
+        statusEl.textContent = "Contacto guardado. Gracias.";
+        form.reset();
+        return;
       }
+      if (!endpoint) {
+        statusEl.dataset.state = "error";
+        statusEl.textContent = "La lista aún no está conectada. El correo no se ha guardado.";
+        return;
+      }
+      form.setAttribute("action", endpoint);
+      form.setAttribute("target", "lista-frame");
+      statusEl.dataset.state = "ready";
+      statusEl.textContent = "Guardando…";
+      form.submit();
+      window.setTimeout(function () {
+        form.reset();
+        statusEl.textContent = "Contacto guardado. Gracias.";
+      }, 700);
     });
   }
 
@@ -574,7 +610,7 @@
       orderSections(content);
       bootVideo(content);
       bootNav(content);
-      bootForm();
+      bootForm(content);
       bootLightbox();
       bootGalleryScroll();
       bootSparks();

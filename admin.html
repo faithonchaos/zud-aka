@@ -308,6 +308,8 @@
         <label>Párrafos (uno por línea) <textarea id="rotterdam.paragraphs"></textarea></label>
         <label>Botón <input id="rotterdam.button"></label>
         <label>Nota <textarea id="rotterdam.note"></textarea></label>
+        <label>URL de la lista <input id="rotterdam.endpoint" placeholder="https://script.google.com/macros/s/…/exec"></label>
+        <p class="note">Los correos no se ven en este panel. Van a la hoja de Google del artista (pestaña Lista). Pega aquí la URL de Apps Script que termina en /exec. Si está vacío, el formulario no guarda nada.</p>
       </section>
 
       <section class="card" id="admin-blocks">
@@ -353,7 +355,7 @@
         "videoId", "bio",
         "mystic.kicker", "mystic.title", "mystic.copy", "mystic.image",
         "revolt.kicker", "revolt.title", "revolt.copy", "revolt.image",
-        "rotterdam.kicker", "rotterdam.title", "rotterdam.button", "rotterdam.note"
+        "rotterdam.kicker", "rotterdam.title", "rotterdam.button", "rotterdam.note", "rotterdam.endpoint"
       ];
 
       function status(msg, ok) {

@@ -723,6 +723,14 @@
       padding: 0.75rem 0.9rem;
       font-size: 1rem;
     }
+    .hp {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+    }
+    .form-plate { position: relative; }
     .form-note, .form-status { font-size: 0.92rem; color: var(--muted); }
     .form-status[data-state="error"] { color: #ff8a80; }
     .form-status[data-state="ready"] { color: #ffccbc; }
@@ -1008,16 +1016,21 @@
           <h2 class="section-title" id="rotterdam-title" data-bind="rotterdam.title">Rotterdam</h2>
           <div class="rotterdam-copy" data-bind-list="rotterdam.paragraphs">
             <p>Rotterdam forma parte de la proyección del proyecto artístico Zud•AkA — El Gocho Divergente.</p>
-            <p>Deja tu correo electrónico para guardar el contacto y poder comunicar información relacionada con el proyecto y Rotterdam.</p>
-            <p>Este formulario está preparado para conectarse a un servicio de captación. Mientras esa integración no exista, el envío no almacena el correo.</p>
+            <p>Deja tu correo electrónico para entrar en la lista y recibir información del proyecto y de Rotterdam.</p>
+            <p>Al guardar el contacto aceptas que Zud•AkA te escriba sobre el proyecto. Puedes pedir que te quiten de la lista cuando quieras.</p>
           </div>
         </div>
-        <form class="form-plate" id="rotterdam-form" method="post" action="">
+        <form class="form-plate" id="rotterdam-form" method="post" action="" accept-charset="UTF-8">
           <label for="email">Correo electrónico</label>
           <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required spellcheck="false">
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off">
+          <input type="hidden" name="source" value="zud-aka.com">
+          <input type="hidden" name="embed" value="1">
+          <input type="hidden" name="_next" value="https://zud-aka.com/?lista=1#rotterdam">
           <button class="btn btn-fire" type="submit" data-bind="rotterdam.button">Guardar contacto</button>
           <p class="form-note" data-bind="rotterdam.note">El correo se usará para guardar el contacto y comunicar información del proyecto y de Rotterdam.</p>
           <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+          <iframe class="hp" name="lista-frame" id="lista-frame" title="Lista"></iframe>
         </form>
       </div>
     </section>
@@ -1049,7 +1062,7 @@
       border: 0;
     }
   </style>
-  <script src="app.js?v=5"></script>
+  <script src="app.js?v=6"></script>
   <script>ZudAka.bootPublic();</script>
 </body>
 </html>
