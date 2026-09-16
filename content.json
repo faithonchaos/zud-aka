@@ -1,123 +1,129 @@
 {
-    "site":  {
-                 "title":  "Zud•AkA — El Gocho Divergente",
-                 "lang":  "es"
-             },
-    "admin":  {
-                  "passwordSha256":  "d332836f7cfabd8bb8b5568d8fa8f8bfa08eaa43756d6e5becb39e31062440ad"
-              },
-    "brand":  {
-                  "name":  "Zud•AkA",
-                  "tagline":  "El Gocho Divergente",
-                  "logo":  "img/logo-wordmark.jpg",
-                  "seal":  "img/logo-seal-fire.jpg",
-                  "sealAlt":  "img/logo-seal-zk.jpg"
-              },
-    "presave":  {
-                    "href":  "#",
-                    "label":  "Pre-Save en Spotify"
-                },
-    "social":  {
-                   "tiktok":  "#",
-                   "instagram":  "#",
-                   "youtube":  "#"
-               },
-    "marquee":  [
-                    "Zud•AkA",
-                    "El Gocho Divergente",
-                    "El inicio",
-                    "Records",
-                    "Rotterdam",
-                    "Acero y fuego"
-                ],
-    "_gen":  4,
-    "hero":  {
-                 "kicker":  "Próximo lanzamiento",
-                 "copy":  "El próximo lanzamiento está al frente. Pre-Save es la acción principal.",
-                 "image":  "img/selfie.jpg"
-             },
-    "videoId":  "VIDEO_ID",
-    "bio":  "[BIOGRAFIA_CORTA]",
-    "mystic":  {
-                   "kicker":  "Sigilo",
-                   "title":  "El inicio",
-                   "copy":  "La marca se proyecta sobre la piel. Acero, fuego y un ciclo que vuelve a empezar.",
-                   "image":  "img/inicio.jpg"
-               },
-    "revolt":  {
-                   "kicker":  "Revuelta",
-                   "title":  "Mientras arde",
-                   "copy":  "Sentado frente al incendio. El periódico en la mano, el desierto como testigo.",
-                   "image":  "img/revolt.jpg"
-               },
-    "rotterdam":  {
-                      "kicker":  "Captación",
-                      "title":  "Rotterdam",
-                      "paragraphs":  [
-                                         "Rotterdam forma parte de la proyección del proyecto artístico Zud•AkA — El Gocho Divergente.",
-                                         "Deja tu correo electrónico para entrar en la lista y recibir información del proyecto y de Rotterdam.",
-                                         "Al guardar el contacto aceptas que Zud•AkA te escriba sobre el proyecto. Puedes pedir que te quiten de la lista cuando quieras."
-                                     ],
-                      "button":  "Guardar contacto",
-                      "note":  "El correo se usará para guardar el contacto y comunicar información del proyecto y de Rotterdam.",
-                      "endpoint":  ""
-                  },
-    "blocks":  [
-
-               ],
-    "sectionOrder":  [
-                         "hero",
-                         "video",
-                         "gallery",
-                         "mystic",
-                         "revolt",
-                         "bio",
-                         "rotterdam"
-                     ],
-    "library":  [
-                    "img/logo-wordmark.jpg",
-                    "img/logo-seal-fire.jpg",
-                    "img/logo-seal-zk.jpg",
-                    "img/tracks.jpg",
-                    "img/inicio.jpg",
-                    "img/revolt.jpg",
-                    "img/selfie.jpg",
-                    "img/gym.jpg",
-                    "img/mate.jpg",
-                    "img/sunset.jpg",
-                    "img/neon.jpg",
-                    "img/stairs.jpg"
-                ],
-    "gallery":  [
-                    {
-                        "src":  "img/stairs.jpg",
-                        "alt":  "Zud•AkA",
-                        "text":  ""
-                    },
-                    {
-                        "src":  "img/neon.jpg",
-                        "alt":  "Zud•AkA",
-                        "text":  ""
-                    },
-                    {
-                        "src":  "img/mate.jpg",
-                        "alt":  "Zud•AkA",
-                        "text":  ""
-                    },
-                    {
-                        "src":  "img/sunset.jpg",
-                        "alt":  "Zud•AkA",
-                        "text":  ""
-                    },
-                    {
-                        "src":  "img/gym.jpg",
-                        "alt":  "Zud•AkA",
-                        "text":  ""
-                    },
-                    {
-                        "src":  "img/tracks.jpg",
-                        "alt":  "Zud•AkA",
-                        "text":  ""
-                    }
-                ]
+  "site": {
+    "title": "Zud•AkA — El Gocho Divergente",
+    "lang": "es"
+  },
+  "admin": {
+    "passwordSha256": "d332836f7cfabd8bb8b5568d8fa8f8bfa08eaa43756d6e5becb39e31062440ad",
+    "publish": {
+      "repo": "faithonchaos/zud-aka",
+      "path": "content.json",
+      "branch": "main",
+      "salt": "dJcwrMfyS/AgQbrF9tDb2Q==",
+      "iv": "GDexJuSWqjn9Ho+d",
+      "data": "yieNRfLf7ILWhSxrwKVUA4hZAMehpWvgXoLGYaouRy49weMenUF4HFwH+Iy9iT/0ouq5nAyNh7+WPs2TaS8fyrCcIN0cJjdsHbhCf8qtMajy/jgAeqL2RHoLXBqgOwdF21C1hHOa1iYqZsRACQ=="
+    }
+  },
+  "brand": {
+    "name": "Zud•AkA",
+    "tagline": "El Gocho Divergente",
+    "logo": "img/logo-wordmark.jpg",
+    "seal": "img/logo-seal-fire.jpg",
+    "sealAlt": "img/logo-seal-zk.jpg"
+  },
+  "presave": {
+    "href": "#",
+    "label": "Pre-Save en Spotify"
+  },
+  "social": {
+    "tiktok": "#",
+    "instagram": "#",
+    "youtube": "#"
+  },
+  "marquee": [
+    "Zud•AkA",
+    "El Gocho Divergente",
+    "El inicio",
+    "Records",
+    "Rotterdam",
+    "Dovodo"
+  ],
+  "_gen": 4,
+  "hero": {
+    "kicker": "Próximo lanzamiento",
+    "copy": "El próximo lanzamiento está al frente. Pre-Save es la acción principal.",
+    "image": "img/selfie.jpg"
+  },
+  "videoId": "G8aVR2xH184",
+  "bio": "[BIOGRAFIA_CORTA]",
+  "mystic": {
+    "kicker": "Sigilo",
+    "title": "El inicio",
+    "copy": "La marca se proyecta sobre la piel. Acero, fuego y un ciclo que vuelve a empezar.",
+    "image": "img/inicio.jpg"
+  },
+  "revolt": {
+    "kicker": "Revuelta",
+    "title": "Mientras arde",
+    "copy": "Sentado frente al incendio. El periódico en la mano, el desierto como testigo.",
+    "image": "img/revolt.jpg"
+  },
+  "rotterdam": {
+    "kicker": "Captación",
+    "title": "Rotterdam",
+    "paragraphs": [
+      "Rotterdam forma parte de la proyección del proyecto artístico Zud•AkA — El Gocho Divergente.",
+      "Deja tu correo electrónico para guardar el contacto y poder comunicar información relacionada con el proyecto y Rotterdam.",
+      "Este formulario está preparado para conectarse a un servicio de captación. Mientras esa integración no exista, el envío no almacena el correo."
+    ],
+    "button": "Guardar contacto",
+    "note": "El correo se usará para guardar el contacto y comunicar información del proyecto y de Rotterdam.",
+    "endpoint": ""
+  },
+  "blocks": [],
+  "sectionOrder": [
+    "hero",
+    "video",
+    "gallery",
+    "mystic",
+    "revolt",
+    "bio",
+    "rotterdam"
+  ],
+  "library": [
+    "img/logo-wordmark.jpg",
+    "img/logo-seal-fire.jpg",
+    "img/logo-seal-zk.jpg",
+    "img/tracks.jpg",
+    "img/inicio.jpg",
+    "img/revolt.jpg",
+    "img/selfie.jpg",
+    "img/gym.jpg",
+    "img/mate.jpg",
+    "img/sunset.jpg",
+    "img/neon.jpg",
+    "img/stairs.jpg"
+  ],
+  "gallery": [
+    {
+      "src": "img/stairs.jpg",
+      "alt": "Zud•AkA",
+      "text": ""
+    },
+    {
+      "src": "img/neon.jpg",
+      "alt": "Zud•AkA",
+      "text": ""
+    },
+    {
+      "src": "img/mate.jpg",
+      "alt": "Zud•AkA",
+      "text": ""
+    },
+    {
+      "src": "img/sunset.jpg",
+      "alt": "Zud•AkA",
+      "text": ""
+    },
+    {
+      "src": "img/gym.jpg",
+      "alt": "Zud•AkA",
+      "text": ""
+    },
+    {
+      "src": "img/tracks.jpg",
+      "alt": "Zud•AkA",
+      "text": ""
+    }
+  ]
 }
