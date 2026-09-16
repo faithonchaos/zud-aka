@@ -63,12 +63,12 @@
     "title": "Rotterdam",
     "paragraphs": [
       "Rotterdam forma parte de la proyección del proyecto artístico Zud•AkA — El Gocho Divergente.",
-      "Deja tu correo electrónico para guardar el contacto y poder comunicar información relacionada con el proyecto y Rotterdam.",
-      "Este formulario está preparado para conectarse a un servicio de captación. Mientras esa integración no exista, el envío no almacena el correo."
+      "Deja tu correo electrónico para entrar en la lista y recibir información del proyecto y de Rotterdam.",
+      "Al guardar el contacto aceptas que Zud•AkA te escriba sobre el proyecto. Puedes pedir que te quiten de la lista cuando quieras."
     ],
     "button": "Guardar contacto",
     "note": "El correo se usará para guardar el contacto y comunicar información del proyecto y de Rotterdam.",
-    "endpoint": ""
+    "endpoint": "https://script.google.com/macros/s/AKfycbyULnuyZInUtBmjdhA49Qbao3HxmNsidv5d4Shnr2SJAXQ0XO0BmA00Kq0tpAiv7S137A/exec"
   },
   "blocks": [],
   "sectionOrder": [
