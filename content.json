@@ -45,17 +45,17 @@
     "image": "img/selfie.jpg"
   },
   "videoId": "G8aVR2xH184",
-  "bio": "[BIOGRAFIA_CORTA]",
+  "bio": "40 AÑOS. CERO EXCUSAS.\nA los 40 decidí hacer algo que llevaba demasiado tiempo esperando.\nEmpecé a rapear desde cero, porque nunca es tarde para empezar a ser quien eres.\n\nDurante años luché contra mis propios vicios.\nEl alcohol formó parte de mi historia, pero no iba a escribir el final.\nSalí de ahí con una decisión: recuperar el control de mi vida.\n\nNo fue magia. Fue lucha, errores y volver a intentarlo.\nAprendí que empezar de nuevo también es una forma de valentía.\nY que a veces tocar fondo te obliga a construirte desde los cimientos.\n\nHoy el rap me hace feliz.\nNo porque haya llegado a ningún sitio, sino porque por fin estoy caminando hacia el mío.\nCada letra es una parte de mí que antes no sabía cómo expresar.\n\nSoy Zud•AkA, El Gocho Divergente.\nGocho por mis raíces, divergente porque decidí no seguir el camino marcado.\nMi música nace de cuestionar, aprender, sentir y decir lo que pienso.\n\nNo vengo a aparentar que lo tengo todo resuelto.\nVengo a demostrar que puedes cambiar de dirección incluso cuando crees que ya es demasiado tarde.\nEsta es mi primera página, no mi última oportunidad.\n\nSi alguna vez sentiste que llegabas tarde a tu propia vida,\nquizás entiendas por qué estoy aquí, rapeando a los 40.\nZud•AkA acaba de empezar.",
   "mystic": {
     "kicker": "Sigilo",
     "title": "El inicio",
-    "copy": "La marca se proyecta sobre la piel. Acero, fuego y un ciclo que vuelve a empezar.",
+    "copy": "Aquí empezó mi evolución artística: mi primer tema escrito, cuando todavía estaba descubriendo mi propia voz.\nNo era perfecto, pero era auténtico; desde aquella primera letra hasta hoy, cada canción, cada error y cada aprendizaje me han acercado al artista que estoy construyendo.",
     "image": "img/inicio.jpg"
   },
   "revolt": {
     "kicker": "Revuelta",
     "title": "Mientras arde",
-    "copy": "Sentado frente al incendio. El periódico en la mano, el desierto como testigo.",
+    "copy": "A algunas personas no les molesta que cambies. Les molesta que ya no puedan reconocerte.\nCuando dejas los vicios, las excusas y la versión de ti que ellos conocían, dejas de encajar en su historia.\nY ahí descubres algo incómodo: hay gente que prefiere verte perdido antes que verte crecer.",
     "image": "img/revolt.jpg"
   },
   "rotterdam": {
@@ -66,7 +66,7 @@
       "Deja tu correo electrónico para entrar en la lista y recibir información del proyecto y de Rotterdam.",
       "Al guardar el contacto aceptas que Zud•AkA te escriba sobre el proyecto. Puedes pedir que te quiten de la lista cuando quieras."
     ],
-    "button": "Guardar contacto",
+    "button": "Vamos a darle ",
     "note": "El correo se usará para guardar el contacto y comunicar información del proyecto y de Rotterdam.",
     "endpoint": "https://script.google.com/macros/s/AKfycbyULnuyZInUtBmjdhA49Qbao3HxmNsidv5d4Shnr2SJAXQ0XO0BmA00Kq0tpAiv7S137A/exec"
   },
@@ -98,32 +98,32 @@
     {
       "src": "img/stairs.jpg",
       "alt": "Zud•AkA",
-      "text": "**40 AÑOS\\. CERO EXCUSAS\\.**\nA los 40 decidí hacer algo que llevaba demasiado tiempo esperando\\.\nEmpecé a rapear desde cero, porque nunca es tarde para empezar a ser quien eres."
+      "text": "Cada peldaño deja atrás una versión de mí.\nNo subo para llegar más alto, sino para alejarme de quien fui.\nY por primera vez, disfruto del camino."
     },
     {
       "src": "img/neon.jpg",
       "alt": "Zud•AkA",
-      "text": "Durante años luché contra mis propios vicios\\.\nEl alcohol formó parte de mi historia, pero no iba a escribir el final\\.\nSalí de ahí con una decisión: recuperar el control de mi vida\\."
+      "text": "Ya no le pido permiso a la vida.\nLa miro de frente, tomo el control y avanzo como si el mundo fuera mío."
     },
     {
       "src": "img/mate.jpg",
       "alt": "Zud•AkA",
-      "text": ""
+      "text": "Observo las puertas que la vida abre.\nAnalizo, elijo y cruzo la que puede cambiar mi destino."
     },
     {
       "src": "img/sunset.jpg",
       "alt": "Zud•AkA",
-      "text": ""
+      "text": "El sol no se aferra al día cuando llega la noche.\nYo tampoco: aprendí a soltar lo que fui para dejar nacer lo que soy."
     },
     {
       "src": "img/gym.jpg",
       "alt": "Zud•AkA",
-      "text": ""
+      "text": "Entreno porque el cuerpo también necesita recordar quién manda.\nEl dolor pasa, la disciplina queda."
     },
     {
       "src": "img/tracks.jpg",
       "alt": "Zud•AkA",
-      "text": ""
+      "text": "En silencio, cierro los ojos y veo lo que todavía no existe.\nPrimero lo imagino, después lo trabajo hasta hacerlo realidad."
     }
   ]
 }
