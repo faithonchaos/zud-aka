@@ -188,7 +188,7 @@
       font-weight: 600;
     }
     .site-nav a:hover { color: var(--ember); }
-    .header-cta { display: none; }
+    a.btn.header-cta { display: none; }
     .social {
       min-width: 2.75rem;
       min-height: 2.75rem;
@@ -275,18 +275,26 @@
 
     .hero {
       position: relative;
+      overflow: hidden;
+      isolation: isolate;
       padding: clamp(1.2rem, 4vw, 2.5rem) 0 2.4rem;
     }
     .hero-seal {
-      display: none;
+      display: block;
       position: absolute;
-      right: -12%;
-      top: 8%;
-      width: min(70vw, 34rem);
-      opacity: 0.18;
+      left: 0;
+      right: 0;
+      top: -8%;
+      margin-inline: auto;
+      width: min(125vw, 32rem);
+      max-width: none;
+      opacity: 0.48;
+      mix-blend-mode: screen;
       animation: spin 48s linear infinite;
       filter: drop-shadow(0 0 28px rgba(255, 74, 18, 0.35));
       z-index: 0;
+      pointer-events: none;
+      user-select: none;
     }
     .hero-grid {
       position: relative;
@@ -434,7 +442,8 @@
       position: relative;
       width: min(100%, var(--max));
       margin: 0 auto;
-      height: min(74svh, 46rem);
+      height: auto;
+      min-height: min(74svh, 46rem);
       touch-action: pan-y;
       -webkit-user-select: none;
       user-select: none;
@@ -471,7 +480,7 @@
     }
     .gallery-stage {
       position: relative;
-      height: calc(100% - 3.4rem);
+      min-height: min(58svh, 36rem);
     }
     .shot {
       position: absolute;
@@ -487,6 +496,11 @@
       z-index: 1;
     }
     .shot.is-on {
+      position: relative;
+      inset: auto;
+      width: 100%;
+      min-width: 0;
+      min-height: min(58svh, 36rem);
       opacity: 1;
       z-index: 2;
       pointer-events: auto;
@@ -494,12 +508,13 @@
     .shot.is-on[data-dir="next"] { animation: slap-in 0.52s cubic-bezier(0.16, 1.2, 0.32, 1) both; }
     .shot.is-on[data-dir="prev"] { animation: slap-back 0.52s cubic-bezier(0.16, 1.2, 0.32, 1) both; }
     .shot-frame {
-      flex: 1;
-      min-height: 0;
+      flex: 1 1 auto;
+      min-height: min(46svh, 28rem);
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 0.55rem 0.7rem 0;
+      overflow: hidden;
     }
     .shot-frame img {
       width: auto;
@@ -512,7 +527,9 @@
     }
     .shot-caption {
       flex: 0 0 auto;
-      padding: 0.45rem 1rem 0.7rem;
+      min-width: 0;
+      width: 100%;
+      padding: 0.55rem 1rem 2.8rem;
     }
     .shot-num {
       font-family: "Anton", Impact, sans-serif;
@@ -523,11 +540,14 @@
     }
     .shot-text {
       font-family: "Anton", Impact, sans-serif;
-      font-size: clamp(1.15rem, 3.4vw, 1.9rem);
-      line-height: 0.95;
+      font-size: clamp(1.05rem, 3.2vw, 1.7rem);
+      line-height: 1.08;
       text-transform: uppercase;
       letter-spacing: 0.03em;
-      max-width: 22ch;
+      max-width: 100%;
+      white-space: pre-line;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
     .gallery-nav {
       position: absolute;
@@ -548,7 +568,8 @@
     .gallery-tap {
       position: absolute;
       left: 50%;
-      bottom: 3.35rem;
+      top: 0.9rem;
+      bottom: auto;
       transform: translateX(-50%);
       z-index: 7;
       margin: 0;
@@ -802,15 +823,22 @@
     }
 
     @media (min-width: 720px) {
-      .header-cta { display: inline-flex; }
-      .hero { overflow: hidden; }
-      .hero-seal { display: block; }
+      a.btn.header-cta { display: inline-flex; }
+      .hero-seal {
+        left: auto;
+        right: -12%;
+        top: 8%;
+        margin-inline: 0;
+        width: min(70vw, 34rem);
+        opacity: 0.18;
+        mix-blend-mode: normal;
+      }
       .hero-grid {
         grid-template-columns: 1.05fr 0.95fr;
         align-items: center;
       }
       .hero-actions { max-width: 26rem; }
-      .shot-caption { padding: 0.5rem 1.4rem 0.85rem; }
+      .shot-caption { padding: 0.55rem 1.4rem 2.9rem; }
       .shot-frame { padding: 0.7rem 1.2rem 0; }
       .gallery-dots { bottom: 0.7rem; }
       .mystic-grid { grid-template-columns: 0.9fr 1.1fr; }
@@ -878,7 +906,7 @@
 
   <main id="main">
     <section class="hero" id="inicio" data-section="hero" aria-labelledby="hero-title">
-      <img class="hero-seal" data-bind-src="brand.seal" src="img/logo-seal-fire.jpg" alt="">
+      <img class="hero-seal" data-bind-src="brand.seal" src="img/logo-seal-fire.jpg" alt="" aria-hidden="true">
       <div class="wrap hero-grid">
         <div>
           <p class="stamp" data-bind="hero.kicker">Próximo lanzamiento</p>
