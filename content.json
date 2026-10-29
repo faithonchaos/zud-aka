@@ -22,8 +22,8 @@
     "sealAlt": "img/logo-seal-zk.jpg"
   },
   "presave": {
-    "href": "#",
-    "label": "Pre-Save en Spotify"
+    "href": "https://youtu.be/Ryr0E27O7nk?si=rTqGdxhMM20q1twU",
+    "label": "El INICIO"
   },
   "social": {
     "tiktok": "https://www.tiktok.com/@zud_aka?_r=1&_t=ZN-99ngXT98Yhq",
@@ -42,7 +42,7 @@
   "hero": {
     "kicker": "Próximo lanzamiento",
     "copy": "El próximo lanzamiento listo. Guárdalo antes de que salga.",
-    "image": "img/selfie.jpg"
+    "image": "img/inicio.jpg"
   },
   "videoId": "esLJpkIslSM",
   "bio": "40 AÑOS. CERO EXCUSAS.\n\nA los 40 dejé de esconderme detrás de las excusas. Reconocí que el alcohol se había convertido en una jaula y decidí pedir ayuda.\n\nLa recuperación no fue fácil, pero aprendí a enfrentar mi pasado, asumir mi responsabilidad y volver a confiar en mí.\n\nEntonces apareció el rap: una forma de respirar, sanar y decir lo que durante años había callado.\n\nSoy Zud•AkA, El Gocho Divergente. Mi música nace de la vulnerabilidad, la recuperación y la esperanza.\n\nNo tengo todo resuelto, pero sigo aquí, despierto y sin esconderme.\n\nSi sientes que llegas tarde a tu vida, recuerda: todavía puedes empezar.\n\nZud•AkA acaba de empezar.",
@@ -69,7 +69,15 @@
     "note": "El correo se usará para guardar el contacto y comunicar información del proyecto y de Rotterdam.",
     "endpoint": "https://script.google.com/macros/s/AKfycbyULnuyZInUtBmjdhA49Qbao3HxmNsidv5d4Shnr2SJAXQ0XO0BmA00Kq0tpAiv7S137A/exec"
   },
-  "blocks": [],
+  "blocks": [
+    {
+      "id": "block-1793311665244",
+      "kicker": "Nueva",
+      "title": "Nueva sección",
+      "copy": "",
+      "image": ""
+    }
+  ],
   "sectionOrder": [
     "hero",
     "video",
@@ -77,6 +85,7 @@
     "mystic",
     "revolt",
     "bio",
+    "block-1793311665244",
     "rotterdam"
   ],
   "library": [
