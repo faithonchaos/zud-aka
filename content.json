@@ -28,7 +28,7 @@
   "social": {
     "tiktok": "https://www.tiktok.com/@zud_aka?_r=1&_t=ZN-99ngXT98Yhq",
     "instagram": "https://www.instagram.com/zud.aka?stkn=M3J2M2ozOHdieDVh&utm_source=qr",
-    "youtube": "https://linktw.in/EUUSML"
+    "youtube": "https://youtu.be/jrrpbsBMEUY?si=0Hit6TNOl1348ONK"
   },
   "marquee": [
     "Zud•AkA",
@@ -50,12 +50,12 @@
     "kicker": "Sigilo",
     "title": "El inicio",
     "copy": "Mi primera canción. El punto de partida de todo lo que estoy construyendo.\nEsto apenas comienza… y quiero que estés ahí cuando suene.",
-    "image": "img/inicio.jpg"
+    "image": "img/selfie.jpg"
   },
   "revolt": {
-    "kicker": "Muerte",
-    "title": "Quemando lo que era",
-    "copy": "No les molesta que cambies. Les molesta que ya no puedan controlarte.",
+    "kicker": "Próximo Disco ",
+    "title": "POCILGA",
+    "copy": "Pereza     P O C I L G A\nOrgullo    e  r  o r u u v\nCodicia.   r  g  d a j  l a \nIra.          e  u  i    u  a r\nLujuria\nGula\nAvaricia",
     "image": "img/revolt.jpg"
   },
   "rotterdam": {
@@ -69,15 +69,7 @@
     "note": "El correo se usará para guardar el contacto y comunicar información del proyecto y de Rotterdam.",
     "endpoint": "https://script.google.com/macros/s/AKfycbyULnuyZInUtBmjdhA49Qbao3HxmNsidv5d4Shnr2SJAXQ0XO0BmA00Kq0tpAiv7S137A/exec"
   },
-  "blocks": [
-    {
-      "id": "block-1793311665244",
-      "kicker": "Nueva",
-      "title": "Nueva sección",
-      "copy": "",
-      "image": ""
-    }
-  ],
+  "blocks": [],
   "sectionOrder": [
     "hero",
     "video",
@@ -85,7 +77,6 @@
     "mystic",
     "revolt",
     "bio",
-    "block-1793311665244",
     "rotterdam"
   ],
   "library": [
