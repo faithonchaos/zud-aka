@@ -387,7 +387,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=11"></script>
+  <script src="app.js?v=12"></script>
   <script>
     (function () {
       var content = null;
@@ -813,16 +813,21 @@
         var controls = document.getElementById("exitos-controls");
         var save = document.getElementById("save");
         var previous = content.exitos;
+        var previousUpdated = content.exitos_actualizado;
         var saved = false;
         controls.disabled = save.disabled = true;
         content.exitos = items;
-        var pending = persistAndPublish(undefined, function () { saved = true; });
+        content.exitos_actualizado = Math.max(Date.now(), (previousUpdated || 0) + 1);
+        var pending = persistAndPublish("Guardado en GitHub. La portada se actualizará al terminar el despliegue.", function () {
+          saved = true;
+        });
         exitoStatus.textContent = document.getElementById("save-status").textContent;
         return pending.then(function () {
           exitoStatus.textContent = document.getElementById("save-status").textContent;
           controls.disabled = save.disabled = false;
           if (!saved) {
             content.exitos = previous;
+            content.exitos_actualizado = previousUpdated;
             return;
           }
           closeExitoForm();

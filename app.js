@@ -191,8 +191,12 @@
     } catch (err) {}
   }
 
-  function loadFileContent() {
-    return fetch("content.json", { cache: "no-store" }).then(function (res) {
+  var EXITOS_REFRESH_MS = 20000;
+
+  function loadFileContent(freshExitos) {
+    var url = "content.json";
+    if (freshExitos) url += "?exitos=" + Math.floor(Date.now() / EXITOS_REFRESH_MS);
+    return fetch(url, { cache: "no-store" }).then(function (res) {
       if (!res.ok) throw new Error("content.json no disponible");
       return res.json();
     });
@@ -208,6 +212,11 @@
 
   function hydrate(fileContent, extra) {
     var data = extra || fileContent;
+    if (Array.isArray(fileContent.exitos) &&
+        (data.exitos_actualizado || 0) <= (fileContent.exitos_actualizado || 0)) {
+      data.exitos = fileContent.exitos;
+      data.exitos_actualizado = fileContent.exitos_actualizado;
+    }
     if (!Array.isArray(data.blocks)) data.blocks = fileContent.blocks || [];
     if (!Array.isArray(data.library)) data.library = fileContent.library || [];
     if (!Array.isArray(data.marquee)) data.marquee = fileContent.marquee || [];
@@ -223,8 +232,8 @@
     return data;
   }
 
-  function loadContent() {
-    return loadFileContent().then(function (fileContent) {
+  function loadContent(freshExitos) {
+    return loadFileContent(freshExitos).then(function (fileContent) {
       var local = loadLocalContent();
       if (local && local._gen === fileContent._gen) return hydrate(fileContent, local);
       return fileContent;
@@ -613,6 +622,36 @@
     document.getElementById("exitos-empty").hidden = !list.hidden;
   }
 
+  function watchPublicExitos(content) {
+    var lastRendered = JSON.stringify(content.exitos || []);
+    var pending;
+    function refresh() {
+      if (pending) return;
+      pending = loadContent(true).then(function (updated) {
+        var next = JSON.stringify(updated.exitos || []);
+        if (next === lastRendered) return;
+        renderExitos(updated);
+        lastRendered = next;
+      }).catch(function (err) {
+        console.error(err);
+      }).finally(function () {
+        pending = null;
+      });
+    }
+    function refreshIfVisible() {
+      if (!document.hidden) refresh();
+    }
+    global.addEventListener("storage", function (event) {
+      if (event.key === STORAGE_KEY || event.key === null) refresh();
+    });
+    document.addEventListener("visibilitychange", refreshIfVisible);
+    global.addEventListener("focus", refreshIfVisible);
+    global.addEventListener("pageshow", function (event) {
+      if (event.persisted) refreshIfVisible();
+    });
+    global.setInterval(refreshIfVisible, EXITOS_REFRESH_MS);
+  }
+
   function sectionOrderWithExitos(order) {
     var result = order.slice();
     if (!result.includes("exitos")) result.splice(result.indexOf("video") + 1, 0, "exitos");
@@ -856,17 +895,14 @@
   }
 
   function bootPublic() {
-    loadContent().then(function (content) {
+    loadContent(true).then(function (content) {
       document.title = content.site.title;
       document.documentElement.lang = content.site.lang || "es";
       fillBindings(content);
       renderMarquee(content);
       renderGallery(content);
       renderExitos(content);
-      global.addEventListener("storage", function (event) {
-        if (event.key !== STORAGE_KEY) return;
-        loadContent().then(renderExitos).catch(function (err) { console.error(err); });
-      });
+      watchPublicExitos(content);
       renderBlocks(content);
       orderSections(content);
       bootVideo(content);
