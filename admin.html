@@ -99,6 +99,11 @@
       margin-bottom: 1rem;
     }
     .ok { color: #b7f7c2; }
+    #exitos-controls { min-width: 0; margin: 0; padding: 0; border: 0; }
+    #exitos-admin-list { padding: 0; list-style: none; }
+    #exitos-admin-list li { padding: 0.75rem 0; border-bottom: 1px solid var(--line); }
+    #exitos-admin-list p { margin: 0.35rem 0; overflow-wrap: anywhere; }
+    #exito-form input[type="checkbox"] { width: 1.25rem; min-height: 1.25rem; margin: 0; }
     .err { color: #ff8a80; }
     .thumb {
       width: 4.2rem;
@@ -193,6 +198,7 @@
         <a href="#admin-tape">Cinta Acero y fuego</a>
         <a href="#admin-social">TikTok / Instagram / YouTube</a>
         <a href="#admin-gallery">Fotos</a>
+        <a href="#admin-exitos">Gestionar Éxitos</a>
         <a href="#admin-blocks">Secciones extra</a>
         <a href="#admin-publish">Publicar</a>
         <a href="#admin-pass">Cambiar clave</a>
@@ -314,6 +320,38 @@
         <p class="note">Los correos no se ven en este panel. Van a la hoja de Google del artista (pestaña Lista). Pega aquí la URL de Apps Script que termina en /exec. Si está vacío, el formulario no guarda nada.</p>
       </section>
 
+      <section class="card" id="admin-exitos" aria-labelledby="admin-exitos-title">
+        <h2 id="admin-exitos-title">Gestionar Éxitos</h2>
+        <p class="note" id="exitos-status" role="status"></p>
+        <fieldset id="exitos-controls">
+          <button class="btn" type="button" id="add-exito">Agregar Éxito</button>
+          <form class="hidden" id="exito-form">
+            <h3 id="exito-form-title">Agregar Éxito</h3>
+            <div class="row row-2">
+              <label>Título de la canción <input name="titulo" required></label>
+              <label>Artista o subtítulo <input name="artista"></label>
+            </div>
+            <label>Enlace de la canción <input name="enlace" inputmode="url" placeholder="https://" required></label>
+            <div class="row row-2">
+              <label>URL de la miniatura <input name="miniatura" inputmode="url" placeholder="https://"></label>
+              <label>O subir una imagen <input name="archivo" type="file" accept="image/*"></label>
+            </div>
+            <label class="hidden" id="exito-remove-thumbnail">Quitar la imagen subida actual <input name="quitar" type="checkbox"></label>
+            <div class="row row-2">
+              <label>Posición <input name="posicion" type="number" min="1" step="1" required></label>
+              <label>Visible en la web <input name="activo" type="checkbox"></label>
+            </div>
+            <p class="warn hidden" id="exito-error" role="alert"></p>
+            <div class="actions">
+              <button class="btn" type="submit">Guardar éxito</button>
+              <button class="btn-ghost" id="cancel-exito" type="button">Cancelar</button>
+            </div>
+          </form>
+          <p class="note" id="exitos-admin-empty">Aún no hay éxitos.</p>
+          <ul id="exitos-admin-list" role="list"></ul>
+        </fieldset>
+      </section>
+
       <section class="card" id="admin-blocks">
         <h2>Secciones extra</h2>
         <p class="note">Crea bloques nuevos (título, texto y foto opcional). Aparecen en la web en el orden de abajo.</p>
@@ -349,14 +387,23 @@
     </div>
   </div>
 
-  <script src="app.js?v=8"></script>
+  <script src="app.js?v=11"></script>
   <script>
     (function () {
       var content = null;
       var sessionPass = "";
+      var exitoForm = document.getElementById("exito-form");
+      var exitoFields = exitoForm.elements;
+      var exitoList = document.getElementById("exitos-admin-list");
+      var exitoEmpty = document.getElementById("exitos-admin-empty");
+      var exitoStatus = document.getElementById("exitos-status");
+      var exitoError = document.getElementById("exito-error");
+      var addExito = document.getElementById("add-exito");
+      var editingExito = null;
       var CORE = {
         hero: "Inicio",
         video: "Vídeo",
+        exitos: "Éxitos",
         gallery: "Fotos",
         mystic: "El inicio",
         revolt: "Revuelta",
@@ -552,7 +599,8 @@
       function renderOrder() {
         var box = document.getElementById("order-list");
         box.innerHTML = "";
-        (content.sectionOrder || []).forEach(function (id, index) {
+        content.sectionOrder = ZudAka.sectionOrderWithExitos(content.sectionOrder || []);
+        content.sectionOrder.forEach(function (id, index) {
           var row = document.createElement("div");
           row.className = "actions";
           var name = document.createElement("span");
@@ -596,6 +644,8 @@
         renderGallery();
         renderBlocks();
         renderOrder();
+        closeExitoForm();
+        renderExitosAdmin();
       }
 
       function readForm() {
@@ -654,8 +704,9 @@
         }
       }
 
-      function persistAndPublish(okMsg) {
+      function persistAndPublish(okMsg, onSaved) {
         if (!persist()) return Promise.resolve(false);
+        if (onSaved) onSaved();
         var token = ZudAka.getPublishToken();
         if (!token) {
           status("Guardado en este navegador. Conecta GitHub abajo para que salga en internet.");
@@ -673,6 +724,168 @@
           return false;
         });
       }
+
+      function openExitoForm(item) {
+        editingExito = item;
+        exitoForm.reset();
+        showExitoError("");
+        exitoStatus.textContent = "";
+        document.getElementById("exito-form-title").textContent = item ? "Editar éxito" : "Agregar Éxito";
+        var items = ZudAka.getExitos(content);
+        var lastPosition = items.length ? items[items.length - 1].posicion : 0;
+        var uploaded = item && item.miniatura && item.miniatura.startsWith("data:");
+        exitoFields.titulo.value = item ? item.titulo : "";
+        exitoFields.artista.value = item ? item.artista : "";
+        exitoFields.enlace.value = item ? item.enlace_cancion : "";
+        exitoFields.miniatura.value = item && !uploaded ? item.miniatura : "";
+        exitoFields.posicion.value = item ? item.posicion : Math.min(lastPosition + 1, Number.MAX_SAFE_INTEGER);
+        exitoFields.activo.checked = item ? item.activo : true;
+        document.getElementById("exito-remove-thumbnail").classList.toggle("hidden", !uploaded);
+        addExito.hidden = exitoList.hidden = exitoEmpty.hidden = true;
+        exitoForm.classList.remove("hidden");
+        exitoFields.titulo.focus();
+      }
+
+      function closeExitoForm() {
+        editingExito = null;
+        exitoForm.reset();
+        exitoForm.classList.add("hidden");
+        addExito.hidden = exitoList.hidden = false;
+        exitoEmpty.hidden = ZudAka.getExitos(content).length > 0;
+      }
+
+      function showExitoError(message, field) {
+        exitoError.textContent = message;
+        exitoError.classList.toggle("hidden", !message);
+        if (field) field.focus();
+      }
+
+      function renderExitosAdmin() {
+        var items = ZudAka.getExitos(content);
+        exitoList.replaceChildren();
+        exitoEmpty.hidden = items.length > 0;
+        items.forEach(function (item, index) {
+          var row = document.createElement("li");
+          row.dataset.exitoId = item.id;
+          var title = document.createElement("strong");
+          title.textContent = item.titulo + (item.artista ? " — " + item.artista : "");
+          var details = document.createElement("p");
+          details.textContent = "Posición " + item.posicion + " · " + (item.activo ? "Visible" : "Oculto");
+          var destination = document.createElement("p");
+          destination.textContent = item.enlace_cancion;
+          var actions = document.createElement("div");
+          actions.className = "actions";
+          var buttons = [
+            ["Editar", function () { openExitoForm(item); }, false],
+            ["Subir", function () { moveExito(items, index, index - 1); }, index === 0],
+            ["Bajar", function () { moveExito(items, index, index + 1); }, index === items.length - 1],
+            ["Eliminar", function () {
+              if (window.confirm("¿Estás seguro de eliminar este éxito?")) {
+                saveExitos(items.filter(function (entry) { return entry.id !== item.id; }));
+              }
+            }, false]
+          ];
+          buttons.forEach(function (action) {
+            var button = document.createElement("button");
+            button.type = "button";
+            button.className = "btn-ghost";
+            button.textContent = action[0];
+            button.setAttribute("aria-label", action[0] + " " + item.titulo);
+            button.disabled = action[2];
+            button.addEventListener("click", action[1]);
+            actions.appendChild(button);
+          });
+          row.append(title, details, destination, actions);
+          exitoList.appendChild(row);
+        });
+      }
+
+      function moveExito(items, from, to) {
+        var moved = items[from];
+        var neighbor = items[to];
+        var reordered = items.slice();
+        reordered[from] = Object.assign({}, neighbor, { posicion: moved.posicion });
+        reordered[to] = Object.assign({}, moved, { posicion: neighbor.posicion });
+        return saveExitos(reordered, moved.id);
+      }
+
+      function saveExitos(items, focusId) {
+        var controls = document.getElementById("exitos-controls");
+        var save = document.getElementById("save");
+        var previous = content.exitos;
+        var saved = false;
+        controls.disabled = save.disabled = true;
+        content.exitos = items;
+        var pending = persistAndPublish(undefined, function () { saved = true; });
+        exitoStatus.textContent = document.getElementById("save-status").textContent;
+        return pending.then(function () {
+          exitoStatus.textContent = document.getElementById("save-status").textContent;
+          controls.disabled = save.disabled = false;
+          if (!saved) {
+            content.exitos = previous;
+            return;
+          }
+          closeExitoForm();
+          renderExitosAdmin();
+          var row = Array.from(exitoList.children).find(function (child) { return child.dataset.exitoId === focusId; });
+          (row ? row.querySelector("button") : addExito).focus();
+        });
+      }
+
+      addExito.addEventListener("click", function () { openExitoForm(null); });
+      exitoFields.archivo.addEventListener("change", function () {
+        if (exitoFields.archivo.files.length) exitoFields.miniatura.value = "";
+      });
+      document.getElementById("cancel-exito").addEventListener("click", function () {
+        var row = Array.from(exitoList.children).find(function (child) { return editingExito && child.dataset.exitoId === editingExito.id; });
+        closeExitoForm();
+        (row ? row.querySelector("button") : addExito).focus();
+      });
+      exitoForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        showExitoError("");
+        var titulo = exitoFields.titulo.value.trim();
+        var enlace = ZudAka.httpUrl(exitoFields.enlace.value);
+        var thumbnailInput = exitoFields.miniatura.value.trim();
+        var miniatura = ZudAka.httpUrl(thumbnailInput);
+        var posicion = exitoFields.posicion.valueAsNumber;
+        if (!titulo) return showExitoError("Escribe el título de la canción.", exitoFields.titulo);
+        if (!enlace) return showExitoError("Escribe un enlace válido que empiece por http:// o https://.", exitoFields.enlace);
+        if (thumbnailInput && !miniatura) return showExitoError("Escribe una URL de miniatura válida que empiece por http:// o https://.", exitoFields.miniatura);
+        if (!Number.isSafeInteger(posicion) || posicion < 1) return showExitoError("Escribe una posición válida, con un número entero a partir de 1.", exitoFields.posicion);
+
+        var item = editingExito;
+        var file = exitoFields.archivo.files[0];
+        if (file && miniatura) return showExitoError("Elige una imagen o pega su URL para usarla como miniatura.", exitoFields.archivo);
+        if (file) {
+          var controls = document.getElementById("exitos-controls");
+          controls.disabled = true;
+          try {
+            miniatura = await ZudAka.compressImage(file, 640, 0.78);
+          } catch (err) {
+            controls.disabled = false;
+            return showExitoError("No se pudo leer la imagen. Prueba con otra imagen.", exitoFields.archivo);
+          }
+          controls.disabled = false;
+        } else if (!miniatura && item && item.miniatura && !exitoFields.quitar.checked && item.miniatura.startsWith("data:")) {
+          miniatura = item.miniatura;
+        }
+
+        var updated = {
+          id: item ? item.id : crypto.randomUUID(),
+          titulo: titulo,
+          artista: exitoFields.artista.value.trim(),
+          enlace_cancion: enlace,
+          miniatura: miniatura,
+          posicion: posicion,
+          activo: exitoFields.activo.checked,
+          fecha_creacion: item ? item.fecha_creacion : new Date().toISOString()
+        };
+        var items = ZudAka.getExitos(content);
+        if (item) items[items.findIndex(function (entry) { return entry.id === item.id; })] = updated;
+        else items.push(updated);
+        await saveExitos(items, updated.id);
+      });
 
       function showApp() {
         document.getElementById("login-view").classList.add("hidden");

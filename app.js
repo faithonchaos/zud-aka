@@ -553,6 +553,72 @@
     });
   }
 
+  function httpUrl(value) {
+    if (typeof value !== "string" || !/^https?:\/\//i.test(value.trim())) return "";
+    try {
+      var url = new URL(value.trim());
+      return url.username || url.password ? "" : url.href;
+    } catch (err) {
+      return "";
+    }
+  }
+
+  function getExitos(content) {
+    var items = Array.isArray(content.exitos) ? content.exitos : [];
+    return items.slice().sort(function (a, b) { return a.posicion - b.posicion; });
+  }
+
+  function renderExitos(content) {
+    var list = document.getElementById("exitos-list");
+    if (!list) return;
+    var fallback = "img/logo-seal-zk.jpg";
+    list.replaceChildren();
+    getExitos(content).forEach(function (exito) {
+      var url = httpUrl(exito.enlace_cancion);
+      if (!exito.activo || !url) return;
+
+      var item = document.createElement("li");
+      var link = document.createElement("a");
+      link.className = "exito-card";
+      link.href = url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.setAttribute("aria-label", exito.titulo + (exito.artista ? " — " + exito.artista : "") + " (abre en otra pestaña)");
+
+      var cover = document.createElement("span");
+      cover.className = "exito-cover";
+      var image = document.createElement("img");
+      image.alt = "";
+      image.loading = "lazy";
+      image.addEventListener("error", function () { image.src = fallback; }, { once: true });
+      var thumbnail = exito.miniatura || "";
+      image.src = /^data:image\/jpeg;base64,[a-z\d+/=]+$/i.test(thumbnail) ? thumbnail : httpUrl(thumbnail) || fallback;
+      cover.appendChild(image);
+
+      var copy = document.createElement("span");
+      copy.className = "exito-copy";
+      var title = document.createElement("strong");
+      title.textContent = exito.titulo;
+      copy.appendChild(title);
+      if (exito.artista) {
+        var artist = document.createElement("span");
+        artist.textContent = exito.artista;
+        copy.appendChild(artist);
+      }
+      link.append(cover, copy);
+      item.appendChild(link);
+      list.appendChild(item);
+    });
+    list.hidden = !list.childElementCount;
+    document.getElementById("exitos-empty").hidden = !list.hidden;
+  }
+
+  function sectionOrderWithExitos(order) {
+    var result = order.slice();
+    if (!result.includes("exitos")) result.splice(result.indexOf("video") + 1, 0, "exitos");
+    return result;
+  }
+
   function orderSections(content) {
     var main = document.getElementById("main");
     if (!main || !content.sectionOrder) return;
@@ -561,7 +627,7 @@
       mystic: document.getElementById("hazard-revolt"),
       bio: document.getElementById("hazard-rotterdam")
     };
-    content.sectionOrder.forEach(function (id) {
+    sectionOrderWithExitos(content.sectionOrder).forEach(function (id) {
       var node = main.querySelector('[data-section="' + id + '"]');
       if (node) main.appendChild(node);
       if (follow[id]) main.appendChild(follow[id]);
@@ -796,6 +862,11 @@
       fillBindings(content);
       renderMarquee(content);
       renderGallery(content);
+      renderExitos(content);
+      global.addEventListener("storage", function (event) {
+        if (event.key !== STORAGE_KEY) return;
+        loadContent().then(renderExitos).catch(function (err) { console.error(err); });
+      });
       renderBlocks(content);
       orderSections(content);
       bootVideo(content);
@@ -829,7 +900,10 @@
         resolve(canvas.toDataURL("image/jpeg", quality));
         URL.revokeObjectURL(img.src);
       };
-      img.onerror = reject;
+      img.onerror = function (err) {
+        URL.revokeObjectURL(img.src);
+        reject(err);
+      };
       img.src = URL.createObjectURL(file);
     });
   }
@@ -857,6 +931,9 @@
     getPath: getPath,
     setPath: setPath,
     deepClone: deepClone,
+    httpUrl: httpUrl,
+    getExitos: getExitos,
+    sectionOrderWithExitos: sectionOrderWithExitos,
     compressImage: compressImage,
     isAuthed: isAuthed,
     setAuthed: setAuthed,

@@ -392,6 +392,51 @@
       margin-bottom: 1.1rem;
     }
 
+    .exitos-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .exitos-grid[hidden] { display: none; }
+    .exitos-empty { color: var(--muted); }
+    .exito-card {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      height: 100%;
+      border: 1px solid var(--steel-dark);
+      background: #14110f;
+      text-decoration: none;
+      transition: box-shadow 180ms ease, border-color 180ms ease;
+    }
+    .exito-card:hover, .exito-card:focus-visible {
+      border-color: var(--ember);
+      box-shadow: 0 0 1.2rem rgba(255, 74, 18, 0.25);
+    }
+    .exito-cover { display: block; overflow: hidden; aspect-ratio: 1; }
+    .exito-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 180ms ease;
+    }
+    .exito-card:hover img { transform: scale(1.05); }
+    .exito-copy { display: grid; align-content: start; gap: 0.25rem; padding: 0.85rem; overflow-wrap: anywhere; }
+    .exito-copy strong { font-size: 1.15rem; }
+    .exito-copy span { color: var(--muted); }
+    @media (min-width: 480px) {
+      .exitos-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (min-width: 1024px) {
+      .exitos-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .exito-card, .exito-cover img { transition: none; }
+      .exito-card:hover img { transform: none; }
+    }
+
     .video-stage {
       display: flex;
       justify-content: center;
@@ -893,6 +938,7 @@
         <nav class="site-nav" aria-label="Principal">
           <a href="#inicio">Inicio</a>
           <a href="#video">Vídeo</a>
+          <a href="#exitos">Éxitos</a>
           <a href="#fotos">Fotos</a>
           <a href="#mystic">El inicio</a>
           <a href="#revolt">Revuelta</a>
@@ -968,6 +1014,14 @@
             referrerpolicy="strict-origin-when-cross-origin"></iframe>
         </div>
         </div>
+      </div>
+    </section>
+
+    <section id="exitos" data-section="exitos" aria-labelledby="exitos-title">
+      <div class="wrap">
+        <h2 class="section-title" id="exitos-title">Éxitos</h2>
+        <p class="exitos-empty" id="exitos-empty">Próximamente nuevos éxitos.</p>
+        <ul class="exitos-grid" id="exitos-list" role="list" hidden></ul>
       </div>
     </section>
 
@@ -1090,7 +1144,7 @@
       border: 0;
     }
   </style>
-  <script src="app.js?v=10"></script>
+  <script src="app.js?v=11"></script>
   <script>ZudAka.bootPublic();</script>
 </body>
 </html>
